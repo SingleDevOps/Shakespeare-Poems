@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         elevation: 5,              // Adds elevation shadow (Android)
     },
     getNewPoemButton: {
-        backgroundColor: "#1F1F1F", // Sets very dark gray background
+        backgroundColor: "#1F1F2F", // Sets very dark gray background
         padding: 12,               // Adds 12 units padding all around
         borderRadius: 8,           // Rounds corners by 8 units
         alignItems: "center",      // Centers items horizontally
