@@ -1,7 +1,7 @@
 pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
 plugins { id("com.facebook.react.settings") }
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
-rootProject.name = 'Mobile Poem Reader'
+rootProject.name = 'Shapespeare_Poems'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 include ':react-native-linear-gradient'
