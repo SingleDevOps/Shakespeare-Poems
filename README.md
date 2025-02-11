@@ -12,11 +12,10 @@ A React Native mobile application that provides a collection of Shakespeare's po
 - **Amaze Me**: Random poem selection feature
 
 ## Screenshots
+https://github.com/user-attachments/assets/40511848-7251-452d-93f0-b28f6366e80b
+![interface1](https://github.com/user-attachments/assets/95a050bf-c368-4da6-934a-002901b8ef65)![Interface2](https://github.com/user-attachments/assets/6ea837f8-24b3-47d4-b4fe-c27592f5ee66)
 
-![interface1](https://github.com/user-attachments/assets/95a050bf-c368-4da6-934a-002901b8ef65)
-![Interface2](https://github.com/user-attachments/assets/6ea837f8-24b3-47d4-b4fe-c27592f5ee66)
-![Interface3](https://github.com/user-attachments/assets/29285776-22d4-4716-bc56-87f5c712d3ba)
-![Interface4](https://github.com/user-attachments/assets/af3b27d4-c26c-47c1-a312-402777f95aea)
+![Interface3](https://github.com/user-attachments/assets/29285776-22d4-4716-bc56-87f5c712d3ba)![Interface4](https://github.com/user-attachments/assets/af3b27d4-c26c-47c1-a312-402777f95aea)
 
 
 ## Tech Stack
