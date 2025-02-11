@@ -1,0 +1,8 @@
+Whenever the app name changes, these must all change or the app will exit immediately when clicked.
+1. myApp/app.json
+2. myApp/index.js (import the name from "myApp/app.json")
+3. myApp/android/app/build.gradle
+4. myApp/android\app\src\main\java\com\mobile_poem_reader\MainActivity.kt
+5. myApp/android\app\src\main\java\com\mobile_poem_reader\MainApplication.kt
+6. myApp/android\app\src\main\AndroidManifest.xml
+7. myApp/android\app\src\main\res\values\strings.xml
