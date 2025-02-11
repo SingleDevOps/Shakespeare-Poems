@@ -1,4 +1,4 @@
-package com.ShakeSpeare_Poems
+package com.Shakespeare_Poems
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
