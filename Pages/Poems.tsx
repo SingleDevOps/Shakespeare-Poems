@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableHighlight, useColorScheme, ActivityIndicator } from 'react-native';
+import { StatusBar, View, Text, StyleSheet, FlatList, TouchableHighlight, useColorScheme, ActivityIndicator } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import PoemsData from '../JsonFiles/Poems.json';
 import { Fonts } from "../android/app/src/constants/fonts";
@@ -27,7 +27,7 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
   //-------------Waiting to implement the paged display---------------//
 
   const colorScheme = useColorScheme();
-  
+
 
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? '#f0f0f0' : '#121212',
       },
-      headerRight: () => {}
+      headerRight: () => { }
     });
   }, [navigation, route, colorScheme]);
 
@@ -64,6 +64,11 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
 
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
+      <StatusBar
+        backgroundColor={colorScheme === 'light' ? "#f0f0f0" : "#1f1f1f"}
+        showHideTransition={'fade'}
+        animated={true}
+      ></StatusBar>
       <SearchBar
         placeholder='    Search Poems...'
         placeholderTextColor={colorScheme === 'light' ? "black" : "white"}
@@ -79,7 +84,7 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
         renderItem={({ item }) => (
           <TouchableHighlight
             onLongPress={() => { }}
-            onPress={() => navigation.navigate('PoemDetail', {poem:item})}
+            onPress={() => navigation.navigate('PoemDetail', { poem: item })}
             style={colorScheme === 'light' ? styles.PoemItem : styles.darkPoemItem}
             underlayColor={colorScheme === 'light' ? "#d3d3d3" : "#333333"}
             activeOpacity={0.6}

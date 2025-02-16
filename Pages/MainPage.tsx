@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Image, useColorScheme, Text, View, StyleSheet, TouchableHighlight } from "react-native";
+import { StatusBar, Image, useColorScheme, Text, View, StyleSheet, TouchableHighlight } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Fonts } from "../android/app/src/constants/fonts";
@@ -7,6 +7,7 @@ import Poems from "./Poems";
 import PoemDetail from "./PoemDetail";
 import AmazeMe from "./AmazeMe";
 import LikedPoem from "./LikedPoem";
+import { color } from "react-native-elements/dist/helpers";
 const Stack = createNativeStackNavigator();
 
 const MainPage = ({ navigation, route }:{navigation:any, route:any}) => {
@@ -29,7 +30,7 @@ const MainPage = ({ navigation, route }:{navigation:any, route:any}) => {
             >
                 <Image
                     source={
-                      colorScheme === 'light'?require("../assets/pictures/blackheart.png"):require("../assets/pictures/redheart.png")
+                      require("../assets/pictures/redheart.png")
                       }
                     style={{width:24, height:24}}
                 />
@@ -40,6 +41,11 @@ const MainPage = ({ navigation, route }:{navigation:any, route:any}) => {
 
   return (
     <View style={colorScheme === "light" ? styles.container : styles.darkContainer}>
+      <StatusBar
+      backgroundColor={colorScheme ==='light'?"#ffffff":"#1f1f1f"}
+      showHideTransition={'fade'}
+      >
+      </StatusBar>
       <TouchableHighlight
         onPress={() => navigation.navigate("Poems")}
         style={colorScheme === "light" ? styles.touchable_Poems : styles.darkTouchable_Poems}

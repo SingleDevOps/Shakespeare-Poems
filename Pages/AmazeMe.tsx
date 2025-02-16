@@ -59,69 +59,6 @@ const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
           : styles.darkContainer
       }
     >
-      <TouchableHighlight
-        style={
-          colorScheme === "light"
-            ? styles.getNewPoemButton
-            : styles.darkGetNewPoemButton
-        }
-        onPress={handleNewPoem}
-        underlayColor={colorScheme === "light" ? "#d3d3d3" : "#333333"}
-      >
-        <Text
-          style={
-            colorScheme === "light"
-              ? styles.getNewPoemButtonText
-              : styles.darkGetNewPoemButtonText
-          }
-        >
-          Get A New Poem!
-        </Text>
-      </TouchableHighlight>
-
-      <View style={styles.buttonContainer}>
-        <TouchableHighlight
-          style={
-            colorScheme === "light"
-              ? styles.fontSizeButton
-              : styles.darkFontSizeButton
-          }
-          activeOpacity={0.6}
-          underlayColor={colorScheme === "light" ? "white" : "#333333"}
-          onPress={reduceFontSize}
-        >
-          <Text
-            style={
-              colorScheme === "light"
-                ? styles.buttonText
-                : styles.darkButtonText
-            }
-          >
-            Font Size -
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={
-            colorScheme === "light"
-              ? styles.fontSizeButton
-              : styles.darkFontSizeButton
-          }
-          activeOpacity={0.6}
-          underlayColor={colorScheme === "light" ? "white" : "#333333"}
-          onPress={addFontSize}
-        >
-          <Text
-            style={
-              colorScheme === "light"
-                ? styles.buttonText
-                : styles.darkButtonText
-            }
-          >
-            Font Size +
-          </Text>
-        </TouchableHighlight>
-      </View>
-
       <ScrollView
         contentContainerStyle={
           colorScheme === "light"
@@ -144,6 +81,71 @@ const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
           </Text>
         ))}
       </ScrollView>
+
+      <View style={styles.allButtonsContainer}>
+        <View style={styles.buttonContainer}>
+          <TouchableHighlight
+            style={
+              colorScheme === "light"
+                ? styles.fontSizeButton
+                : styles.darkFontSizeButton
+            }
+            activeOpacity={0.6}
+            underlayColor={colorScheme === "light" ? "white" : "#333333"}
+            onPress={reduceFontSize}
+          >
+            <Text
+              style={
+                colorScheme === "light"
+                  ? styles.buttonText
+                  : styles.darkButtonText
+              }
+            >
+              Font Size -
+            </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={
+              colorScheme === "light"
+                ? styles.fontSizeButton
+                : styles.darkFontSizeButton
+            }
+            activeOpacity={0.6}
+            underlayColor={colorScheme === "light" ? "white" : "#333333"}
+            onPress={addFontSize}
+          >
+            <Text
+              style={
+                colorScheme === "light"
+                  ? styles.buttonText
+                  : styles.darkButtonText
+              }
+            >
+              Font Size +
+            </Text>
+          </TouchableHighlight>
+        </View>
+
+        <TouchableHighlight
+          style={
+            colorScheme === "light"
+              ? styles.getNewPoemButton
+              : styles.darkGetNewPoemButton
+          }
+          onPress={handleNewPoem}
+          underlayColor={colorScheme === "light" ? "#d3d3d3" : "#333333"}
+        >
+          <Text
+            style={
+              colorScheme === "light"
+                ? styles.getNewPoemButtonText
+                : styles.darkGetNewPoemButtonText
+            }
+          >
+            Get A New Poem!
+          </Text>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 };
@@ -183,6 +185,7 @@ const styles = StyleSheet.create({
       height: 5,
     },
     flexGrow: 1,
+    marginBottom: 10,
   },
   darkPoemTextContainer: {
     backgroundColor: "#121212",
@@ -194,15 +197,11 @@ const styles = StyleSheet.create({
       height: 5,
     },
     flexGrow: 1,
+    marginBottom: 10,
   },
-  button: {
-    backgroundColor: "#43464b",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 5,
-    alignSelf: "center",
-    width: 370,
+  allButtonsContainer: {
+    marginTop: 10,
+    paddingBottom: 10,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -211,6 +210,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingLeft: 10,
     paddingRight: 10,
+    marginBottom: 15,
   },
   buttonText: {
     fontFamily: Fonts.NotoSerif.Regular,
@@ -231,8 +231,6 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     alignItems: "center",
-    marginTop: 10,
-    marginBottom: 3,
     backgroundColor: "white",
     justifyContent: "center",
     marginHorizontal: 5,
@@ -245,30 +243,28 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     alignItems: "center",
-    marginTop: 10,
-    marginBottom: 3,
     backgroundColor: "#1f1f1f",
     justifyContent: "center",
     marginHorizontal: 5,
     elevation: 5,
   },
   getNewPoemButton: {
-    backgroundColor: "#1F1F2F",
+    backgroundColor: "#1F1F1F",
     padding: 12,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: 5,
     alignSelf: "center",
     width: 370,
+    marginTop: -2,
   },
   darkGetNewPoemButton: {
     backgroundColor: "#43464b",
     padding: 12,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: 5,
     alignSelf: "center",
     width: 370,
+    marginTop: -2,
   },
   getNewPoemButtonText: {
     fontFamily: Fonts.NotoSerif.Regular,
@@ -279,7 +275,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.NotoSerif.Regular,
     color: "white",
     fontSize: 20,
-  },
+  }
 });
 
 export default AmazeMe;

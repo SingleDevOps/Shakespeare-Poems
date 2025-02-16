@@ -13,6 +13,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		0D1FF1A16F0D494BB195A319 /* NotoSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1003F2F997EB436EB6226FDA /* NotoSerif-Regular.ttf */; };
 		7B94F100D3F14105BD8CF333 /* black-heart-icon-png-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 5993A1AE9AE644CDB5F39688 /* black-heart-icon-png-29.png */; };
+		42C8505349B64B74A4D31A0B /* blackheart.png in Resources */ = {isa = PBXBuildFile; fileRef = AE49F4821F1641CCAAD1A23A /* blackheart.png */; };
+		5C19C946E6F84DD0BEE64AD9 /* redheart.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF5E8749BC454697FE9D80 /* redheart.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		1003F2F997EB436EB6226FDA /* NotoSerif-Regular.ttf */ = {isa = PBXFileReference; name = "NotoSerif-Regular.ttf"; path = "../assets/fonts/NotoSerif-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		5993A1AE9AE644CDB5F39688 /* black-heart-icon-png-29.png */ = {isa = PBXFileReference; name = "black-heart-icon-png-29.png"; path = "../assets/pictures/black-heart-icon-png-29.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AE49F4821F1641CCAAD1A23A /* blackheart.png */ = {isa = PBXFileReference; name = "blackheart.png"; path = "../assets/pictures/blackheart.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8ABF5E8749BC454697FE9D80 /* redheart.png */ = {isa = PBXFileReference; name = "redheart.png"; path = "../assets/pictures/redheart.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +130,8 @@
 			children = (
 				1003F2F997EB436EB6226FDA /* NotoSerif-Regular.ttf */,
 				5993A1AE9AE644CDB5F39688 /* black-heart-icon-png-29.png */,
+				AE49F4821F1641CCAAD1A23A /* blackheart.png */,
+				8ABF5E8749BC454697FE9D80 /* redheart.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -202,6 +208,8 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0D1FF1A16F0D494BB195A319 /* NotoSerif-Regular.ttf in Resources */,
 				7B94F100D3F14105BD8CF333 /* black-heart-icon-png-29.png in Resources */,
+				42C8505349B64B74A4D31A0B /* blackheart.png in Resources */,
+				5C19C946E6F84DD0BEE64AD9 /* redheart.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

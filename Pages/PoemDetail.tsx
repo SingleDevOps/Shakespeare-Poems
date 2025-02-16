@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Fonts } from "../android/app/src/constants/fonts";
 import RNFS from 'react-native-fs';
-
+import {openDatabase} from 'react-native-sqlite-storage';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
@@ -90,6 +90,28 @@ const PoemDetail = ({
 
   return (
     <View style={colorScheme === "light" ? styles.container : styles.darkContainer}>
+      
+
+      <ScrollView
+        contentContainerStyle={
+          colorScheme === "light"
+            ? styles.PoemTextContainer
+            : styles.darkPoemTextContainer
+        }
+      >
+        {PoemText.split("\n").map((line: string, index: number) => (
+          <Text
+            key={index}
+            style={[
+              colorScheme === "light" ? styles.PoemText : styles.darkPoemText,
+              { fontSize },
+            ]}
+          >
+            {line}
+            {"\n"}
+          </Text>
+        ))}
+      </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableHighlight
           style={colorScheme === "light" ? styles.fontSizeButton : styles.darkFontSizeButton}
@@ -112,27 +134,6 @@ const PoemDetail = ({
           </Text>
         </TouchableHighlight>
       </View>
-
-      <ScrollView
-        contentContainerStyle={
-          colorScheme === "light"
-            ? styles.PoemTextContainer
-            : styles.darkPoemTextContainer
-        }
-      >
-        {PoemText.split("\n").map((line: string, index: number) => (
-          <Text
-            key={index}
-            style={[
-              colorScheme === "light" ? styles.PoemText : styles.darkPoemText,
-              { fontSize },
-            ]}
-          >
-            {line}
-            {"\n"}
-          </Text>
-        ))}
-      </ScrollView>
     </View>
   );
 };
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
   },
   fontSizeButton: {
     flex: 1,
-    height: 40,
+    height: 50,
     fontSize: 19,
     padding: 5,
     borderRadius: 5,
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   },
   darkFontSizeButton: {
     flex: 1,
-    height: 40,
+    height: 50,
     fontSize: 19,
     padding: 5,
     borderRadius: 5,
