@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   ScrollView,
   Text,
@@ -8,6 +8,10 @@ import {
   useColorScheme,
 } from "react-native";
 import { Fonts } from "../android/app/src/constants/fonts";
+import RNFS from 'react-native-fs';
+
+import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 
 const PoemDetail = ({
   route,
@@ -17,21 +21,40 @@ const PoemDetail = ({
   navigation: any;
 }) => {
   const colorScheme = useColorScheme();
-  const PoemText = route.params["text"];
-  const PoemTitle = route.params["title"];
-  const [fontSize, setfontSize] = useState(styles.PoemText.fontSize);
+  const Poem = route.params['poem'];//Poems.tsx passes a poem:item into poemdetail.
+  const PoemText = Poem['poem'];
+  const PoemTitle = Poem['title'];
+  const PoemId = Poem['id'];
+  const Author = Poem['author'];
+  const [fontSize, setFontSize] = useState(styles.PoemText.fontSize);
+  const [liked, setLiked] = useState(false);
 
-  const addFontSize = () => {
+  const addFontSize = useCallback(() => {
     if (fontSize <= 25) {
-      setfontSize((fontSize) => fontSize + 1);
+      setFontSize((prevSize) => prevSize + 1);
     }
-  };
+  }, [fontSize]);
 
-  const reduceFontSize = () => {
+  const reduceFontSize = useCallback(() => {
     if (fontSize >= 15) {
-      setfontSize(fontSize - 1);
+      setFontSize((prevSize) => prevSize - 1);
     }
-  };
+  }, [fontSize]);
+
+  const handleLikePoem = useCallback(() => {
+    setLiked(liked => !liked);
+    const likedPoem = JSON.stringify(Poem);
+    const filePath = RNFS.DocumentDirectoryPath + '/JsonFiles/LikedPoems.json';
+
+    RNFS.writeFile(filePath, likedPoem, 'utf8')
+        .then(() => {
+            console.log('Poem saved successfully');
+        })
+        .catch((error) => {
+            console.log('Error saving poem:', error);
+        });
+}, [Poem]);
+
 
   useEffect(() => {
     navigation.setOptions({
@@ -40,57 +63,51 @@ const PoemDetail = ({
         fontFamily: Fonts.NotoSerif.Regular,
         color: colorScheme === "light" ? "black" : "white",
       },
-      headerTintColor: colorScheme === "light" ? "black" : "white",
-      headerStyle:{
-          backgroundColor: colorScheme === "light" ? "white" : "#121212",
+      headerTintColor: colorScheme === "light" ? "black" : "red",
+      headerStyle: {
+        backgroundColor: colorScheme === "light" ? "white" : "#121212",
       },
+      headerRight: () => (
+        <TouchableHighlight
+          onPress={handleLikePoem}
+          style={[
+            styles.likePoemButton,
+            colorScheme === "light" ? styles.lightButton : styles.darkButton
+          ]}
+          underlayColor={colorScheme === "light" ? "#e0e0e0" : "#333333"}
+          activeOpacity={0.6}
+        >
+          <Text style={[
+            styles.likePoemButtonText,
+            colorScheme === "light" ? styles.lightText : styles.darkText
+          ]}>
+            {liked ? "Unlike" : "Like"}
+          </Text>
+        </TouchableHighlight>
+      )
     });
-  }, [navigation, PoemTitle, colorScheme]);
+  }, [navigation, PoemTitle, colorScheme, handleLikePoem, liked]);
 
   return (
-    <View
-      style={
-        colorScheme === "light" ? styles.container : styles.darkContainer
-      }
-    >
+    <View style={colorScheme === "light" ? styles.container : styles.darkContainer}>
       <View style={styles.buttonContainer}>
         <TouchableHighlight
-          style={
-            colorScheme === "light"
-              ? styles.fontSizeButton
-              : styles.darkFontSizeButton
-          }
+          style={colorScheme === "light" ? styles.fontSizeButton : styles.darkFontSizeButton}
           activeOpacity={0.6}
-          underlayColor={colorScheme === "light" ? "white" : "#333333"}
+          underlayColor={colorScheme === "light" ? "#e0e0e0" : "#333333"}
           onPress={reduceFontSize}
         >
-          <Text
-            style={
-              colorScheme === "light"
-                ? styles.buttonText
-                : styles.darkButtonText
-            }
-          >
+          <Text style={colorScheme === "light" ? styles.buttonText : styles.darkButtonText}>
             Font Size -
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
-          style={
-            colorScheme === "light"
-              ? styles.fontSizeButton
-              : styles.darkFontSizeButton
-          }
+          style={colorScheme === "light" ? styles.fontSizeButton : styles.darkFontSizeButton}
           activeOpacity={0.6}
-          underlayColor={colorScheme === "light" ? "white" : "#333333"}
+          underlayColor={colorScheme === "light" ? "#e0e0e0" : "#333333"}
           onPress={addFontSize}
         >
-          <Text
-            style={
-              colorScheme === "light"
-                ? styles.buttonText
-                : styles.darkButtonText
-            }
-          >
+          <Text style={colorScheme === "light" ? styles.buttonText : styles.darkButtonText}>
             Font Size +
           </Text>
         </TouchableHighlight>
@@ -107,9 +124,7 @@ const PoemDetail = ({
           <Text
             key={index}
             style={[
-              colorScheme === "light"
-                ? styles.PoemText
-                : styles.darkPoemText,
+              colorScheme === "light" ? styles.PoemText : styles.darkPoemText,
               { fontSize },
             ]}
           >
@@ -206,6 +221,30 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.NotoSerif.Regular,
     textAlign: "center",
   },
+  likePoemButton: {
+    padding: 8,
+    borderRadius: 30,
+    minWidth: 70,
+    paddingLeft:10,
+    right:10,
+  },
+  lightButton: {
+    backgroundColor: 'lightgray',
+  },
+  darkButton: {
+    backgroundColor: '#1f1f1f',
+  },
+  likePoemButtonText: {
+    fontSize: 16,
+    fontFamily: Fonts.NotoSerif.Regular,
+    textAlign: 'center',
+  },
+  lightText: {
+    color: '#000000',
+  },
+  darkText: {
+    color: '#ffffff',
+  }
 });
 
 export default PoemDetail;

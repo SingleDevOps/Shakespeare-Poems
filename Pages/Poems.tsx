@@ -1,21 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableHighlight, useColorScheme } from 'react-native';
-import { faker } from '@faker-js/faker';
+import { View, Text, StyleSheet, FlatList, TouchableHighlight, useColorScheme, ActivityIndicator } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import PoemsData from '../Poems.json';
+import PoemsData from '../JsonFiles/Poems.json';
 import { Fonts } from "../android/app/src/constants/fonts";
 
-const generateDummyPoems = () => (
-  Array.from({ length: 20 }, (_, index) => ({
-    id: index + 1,
-    title: faker.lorem.words(5),
-    poem: faker.lorem.paragraphs(3),
-    author: faker.person.fullName(),
-  }))
-);
+// import { faker } from '@faker-js/faker';
+// const generateDummyPoems = () => (
+//   Array.from({ length: 20 }, (_, index) => ({
+//     id: index + 1,
+//     title: faker.lorem.words(5),
+//     poem: faker.lorem.paragraphs(3),
+//     author: faker.person.fullName(),
+//   }))
+// );
 
 const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredPoems, setFilteredPoems] = useState(PoemsData);
+
+  //-------------Waiting to implement the paged display---------------//
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [paginatedPoems, setpaginatedPoems] = useState<typeof PoemsData>([]);
+  const poemCount = PoemsData.length;
+  const ITEMS_PER_PAGE = 20;
+  //-------------Waiting to implement the paged display---------------//
+
   const colorScheme = useColorScheme();
+  
+
+
   useEffect(() => {
     navigation.setOptions({
       title: route.name,
@@ -23,15 +37,16 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
         fontFamily: Fonts.NotoSerif.Regular,
         color: colorScheme === 'light' ? 'black' : 'white',
       },
-      headerTintColor: colorScheme === "light" ? "black" : "white",
+      headerTintColor: colorScheme === "light" ? "black" : "red",
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? '#f0f0f0' : '#121212',
       },
+      headerRight: () => {}
     });
   }, [navigation, route, colorScheme]);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredPoems, setFilteredPoems] = useState(PoemsData);
+
+
 
   const handleSearch = (query: string): void => {
     setSearchQuery(query);
@@ -64,7 +79,7 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
         renderItem={({ item }) => (
           <TouchableHighlight
             onLongPress={() => { }}
-            onPress={() => navigation.navigate('PoemDetail', { text: item.poem, title: item.title })}
+            onPress={() => navigation.navigate('PoemDetail', {poem:item})}
             style={colorScheme === 'light' ? styles.PoemItem : styles.darkPoemItem}
             underlayColor={colorScheme === 'light' ? "#d3d3d3" : "#333333"}
             activeOpacity={0.6}

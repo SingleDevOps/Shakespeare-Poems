@@ -7,7 +7,7 @@ import {
   StyleSheet,
   useColorScheme,
 } from "react-native";
-import PoemsData from "../Poems.json";
+import PoemsData from "../JsonFiles/Poems.json";
 import { Fonts } from "../android/app/src/constants/fonts";
 
 const getNewPoem = () => PoemsData[Math.floor(Math.random() * PoemsData.length)];
@@ -24,7 +24,7 @@ const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
         fontFamily: Fonts.NotoSerif.Regular,
         color: colorScheme === "light" ? "#1e1e1e" : "#f0f0f0",
       },
-      headerTintColor: colorScheme === "light" ? "black" : "white",
+      headerTintColor: colorScheme === "light" ? "black" : "red",
       headerStyle:{
           backgroundColor: colorScheme === "light" ? "#FFF" : "#121212",
       },
