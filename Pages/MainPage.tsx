@@ -10,7 +10,7 @@ import LikedPoem from "./LikedPoem";
 import { color } from "react-native-elements/dist/helpers";
 const Stack = createNativeStackNavigator();
 
-const MainPage = ({ navigation, route }:{navigation:any, route:any}) => {
+const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
@@ -23,27 +23,28 @@ const MainPage = ({ navigation, route }:{navigation:any, route:any}) => {
       headerStyle: {
         backgroundColor: colorScheme === "light" ? "#ffffff" : "#121212",
       },
-        headerRight: () => (
-            <TouchableHighlight
-                onPress={() => navigation.navigate("LikedPoem")}
-                underlayColor="transparent" // Optional: Prevents highlight effect
-            >
-                <Image
-                    source={
-                      require("../assets/pictures/redheart.png")
-                      }
-                    style={{width:24, height:24}}
-                />
-            </TouchableHighlight>
-        ),
+      headerRight: () => (
+        <TouchableHighlight
+          onPressIn={() => { }}
+          // onPress={() => navigation.navigate("LikedPoem")}
+          underlayColor="transparent" // Optional: Prevents highlight effect
+        >
+          <Image
+            source={
+              require("../assets/pictures/redheart.png")
+            }
+            style={{ width: 24, height: 24 }}
+          />
+        </TouchableHighlight>
+      ),
     });
   }, [navigation, route, colorScheme]);
 
   return (
     <View style={colorScheme === "light" ? styles.container : styles.darkContainer}>
       <StatusBar
-      backgroundColor={colorScheme ==='light'?"#ffffff":"#1f1f1f"}
-      showHideTransition={'fade'}
+        backgroundColor={colorScheme === 'light' ? "#ffffff" : "#1f1f1f"}
+        showHideTransition={'fade'}
       >
       </StatusBar>
       <TouchableHighlight
@@ -52,7 +53,7 @@ const MainPage = ({ navigation, route }:{navigation:any, route:any}) => {
         underlayColor={colorScheme === "light" ? "#e0e0e0" : "#333333"}
         activeOpacity={0.7}
       >
-       <View style={colorScheme === "light" ? styles.button: styles.darkButton}>
+        <View style={colorScheme === "light" ? styles.button : styles.darkButton}>
           <Text style={colorScheme === "light" ? styles.buttonText : styles.darkButtonText}>
             Poems
           </Text>
@@ -65,7 +66,7 @@ const MainPage = ({ navigation, route }:{navigation:any, route:any}) => {
         underlayColor={colorScheme === "light" ? "#e0e0e0" : "#333333"}
         activeOpacity={0.7}
       >
-        <View style={colorScheme === "light" ? styles.button: styles.darkButton}>
+        <View style={colorScheme === "light" ? styles.button : styles.darkButton}>
           <Text style={colorScheme === "light" ? styles.buttonText : styles.darkButtonText}>
             Amaze Me!
           </Text>
@@ -124,20 +125,20 @@ const styles = StyleSheet.create({
   touchable_Poems: {
     flex: 1,
     backgroundColor: "#ffffff",
-//     borderBottomWidth: 3,
-//     borderColor: "gold",
+    //     borderBottomWidth: 3,
+    //     borderColor: "gold",
   },
   darkTouchable_Poems: {
     flex: 1,
     backgroundColor: "#1f1f1f",
   },
   touchable_AmazeMe: {
-      flex: 1,
-      backgroundColor: "#ffffff",
+    flex: 1,
+    backgroundColor: "#ffffff",
   },
   darkTouchable_AmazeMe: {
-      flex: 1,
-      backgroundColor: "#1f1f1f",
+    flex: 1,
+    backgroundColor: "#1f1f1f",
   },
 });
 
