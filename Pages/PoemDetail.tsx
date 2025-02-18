@@ -8,8 +8,8 @@ import {
   useColorScheme,
 } from "react-native";
 import { Fonts } from "../android/app/src/constants/fonts";
-import RNFS from 'react-native-fs';
-import {openDatabase} from 'react-native-sqlite-storage';
+
+
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
@@ -41,19 +41,19 @@ const PoemDetail = ({
     }
   }, [fontSize]);
 
-  const handleLikePoem = useCallback(() => {
-    setLiked(liked => !liked);
-    const likedPoem = JSON.stringify(Poem);
-    const filePath = RNFS.DocumentDirectoryPath + '/JsonFiles/LikedPoems.json';
+//   const handleLikePoem = useCallback(() => {
+//     setLiked(liked => !liked);
+//     const likedPoem = JSON.stringify(Poem);
+//     const filePath = RNFS.DocumentDirectoryPath + '/JsonFiles/LikedPoems.json';
 
-    RNFS.writeFile(filePath, likedPoem, 'utf8')
-        .then(() => {
-            console.log('Poem saved successfully');
-        })
-        .catch((error) => {
-            console.log('Error saving poem:', error);
-        });
-}, [Poem]);
+//     RNFS.writeFile(filePath, likedPoem, 'utf8')
+//         .then(() => {
+//             console.log('Poem saved successfully');
+//         })
+//         .catch((error) => {
+//             console.log('Error saving poem:', error);
+//         });
+// }, [Poem]);
 
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const PoemDetail = ({
       },
       headerRight: () => (
         <TouchableHighlight
-          onPress={handleLikePoem}
+          onPress={()=>{}} //waiting for implementation
           style={[
             styles.likePoemButton,
             colorScheme === "light" ? styles.lightButton : styles.darkButton
@@ -86,7 +86,7 @@ const PoemDetail = ({
         </TouchableHighlight>
       )
     });
-  }, [navigation, PoemTitle, colorScheme, handleLikePoem, liked]);
+  }, [navigation, PoemTitle, colorScheme, liked]);
 
   return (
     <View style={colorScheme === "light" ? styles.container : styles.darkContainer}>
