@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, View, Text, StyleSheet, FlatList, TouchableHighlight, useColorScheme, ActivityIndicator } from 'react-native';
+import { StatusBar, View, Text, StyleSheet, FlatList, TouchableHighlight, useColorScheme } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import PoemsData from '../JsonFiles/Poems.json';
-import { Fonts } from "../android/app/src/constants/fonts";
+import { Fonts } from '../android/app/src/constants/fonts';
 
 // import { faker } from '@faker-js/faker';
 // const generateDummyPoems = () => (
@@ -18,14 +18,6 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredPoems, setFilteredPoems] = useState(PoemsData);
 
-  //-------------Waiting to implement the paged display---------------//
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [paginatedPoems, setpaginatedPoems] = useState<typeof PoemsData>([]);
-  const poemCount = PoemsData.length;
-  const ITEMS_PER_PAGE = 20;
-  //-------------Waiting to implement the paged display---------------//
-
   const colorScheme = useColorScheme();
 
 
@@ -37,11 +29,11 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
         fontFamily: Fonts.NotoSerif.Regular,
         color: colorScheme === 'light' ? 'black' : 'white',
       },
-      headerTintColor: colorScheme === "light" ? "black" : "red",
+      headerTintColor: colorScheme === 'light' ? 'black' : 'red',
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? '#f0f0f0' : '#121212',
       },
-      headerRight: () => { }
+      headerRight: () => {},
     });
   }, [navigation, route, colorScheme]);
 
@@ -65,13 +57,13 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
       <StatusBar
-        backgroundColor={colorScheme === 'light' ? "#f0f0f0" : "#1f1f1f"}
+        backgroundColor={colorScheme === 'light' ? '#f0f0f0' : '#1f1f1f'}
         showHideTransition={'fade'}
         animated={true}
-      ></StatusBar>
+       />
       <SearchBar
-        placeholder='    Search Poems...'
-        placeholderTextColor={colorScheme === 'light' ? "black" : "white"}
+        placeholder="    Search Poems..."
+        placeholderTextColor={colorScheme === 'light' ? 'black' : 'white'}
         containerStyle={colorScheme === 'light' ? styles.searchContainer : styles.darkSearchContainer}
         inputContainerStyle={colorScheme === 'light' ? styles.searchInputContainer : styles.darkSearchInputContainer}
         inputStyle={colorScheme === 'light' ? styles.searchInput : styles.darkSearchInput}
@@ -86,13 +78,13 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
             onLongPress={() => { }}
             onPress={() => navigation.navigate('PoemDetail', { poem: item })}
             style={colorScheme === 'light' ? styles.PoemItem : styles.darkPoemItem}
-            underlayColor={colorScheme === 'light' ? "#d3d3d3" : "#333333"}
+            underlayColor={colorScheme === 'light' ? '#d3d3d3' : '#333333'}
             activeOpacity={0.6}
           >
             <View>
               <Text style={colorScheme === 'light' ? styles.PoemTitleText : styles.darkPoemTitleText}>{item.title}</Text>
               <Text style={colorScheme === 'light' ? styles.PoemAuthorText : styles.darkPoemAuthorText}>{item.author}</Text>
-              <Text>{"\n"}</Text>
+              <Text>{'\n'}</Text>
             </View>
           </TouchableHighlight>
         )}
