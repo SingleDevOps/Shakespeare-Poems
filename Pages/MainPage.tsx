@@ -22,7 +22,7 @@ const setupDatabase = async () => {
 
 
 const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
-  setupDatabase();
+
   const colorScheme = useColorScheme();
 
   useEffect(() => {

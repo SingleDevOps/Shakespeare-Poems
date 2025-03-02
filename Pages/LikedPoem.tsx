@@ -52,7 +52,7 @@ const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
       setFilteredPoems(likedPoems);
     } else {
       const filtered = likedPoems.filter(
-        (Poem: { title: string; poet: string; poem: string; }) =>
+        (Poem) => //removed : { title: string; poet: string; poem: string; }
           Poem.title.toLowerCase().includes(query.toLowerCase()) ||
           Poem.poet.toLowerCase().includes(query.toLowerCase()) ||
           Poem.poem.toLowerCase().includes(query.toLowerCase())
@@ -64,8 +64,8 @@ const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
   const handleUnlike = async (id: number) => {
     try {
       await deletePoem(id);
-      setLikedPoems(likedPoems.filter((poem: { id: number; }) => poem.id !== id));
-      setFilteredPoems(filteredPoems.filter((poem: { id: number; }) => poem.id !== id));
+      setLikedPoems(likedPoems.filter((poem) => poem.id !== id)); //removed : { id: number; }
+      setFilteredPoems(filteredPoems.filter((poem) => poem.id !== id)); //removed : { id: number; }
       console.log(`Poem with ID ${id} unliked successfully.`);
     } catch (error) {
       console.error(`Error unliking poem with ID ${id}:`, error);
@@ -85,7 +85,7 @@ const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
         searchIcon={false}
       />
       <FlatList
-        data={filteredPoems.length > 0 ? filteredPoems : []}
+        data={filteredPoems} //removed .length > 0 ? filteredPoems : []
         renderItem={({ item }) => (
           <TouchableHighlight
             onLongPress={() => handleUnlike(item.id)}
@@ -96,7 +96,7 @@ const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
             >
             <View>
               <Text style={colorScheme === 'light' ? styles.PoemTitleText : styles.darkPoemTitleText}>
-                {item?.title}
+                {item.title} {/*removed ? */}
               </Text>
               <Text style={colorScheme === 'light' ? styles.PoemAuthorText : styles.darkPoemAuthorText}>
                 {item.poet}

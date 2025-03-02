@@ -71,7 +71,7 @@ const PoemDetail = ({
 
   const handleLikePress = useCallback(() => {
     if (!liked) {
-      insertPoem(Poem.id, Poem.title, Poem.author, Poem.poem)
+      insertPoem(Poem.id, Poem.poem, Poem.author, Poem.title)
         .then(() => {
           setLiked(true);
         })
@@ -90,14 +90,16 @@ const PoemDetail = ({
   }, [Poem.author, Poem.id, Poem.poem, Poem.title, liked]);
 
   useEffect(() => {
-    checkPoemExistsInDB(Poem.id)
-    .then(exists => {
-      setLiked(exists);
-    })
-    .catch(error => {
-      console.error('Error checking poem existence:', error);
-  });
-  });
+    const check = async () => {
+      try{
+        const exists = await checkPoemExistsInDB(Poem.id);
+        setLiked(exists);
+      } catch(error){
+        console.error('Error checking poem existence:', error);
+      }
+    };
+    check();
+  }, [Poem.id]);
 
   useEffect(() => {
     navigation.setOptions({
