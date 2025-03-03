@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 import { getAllLikedPoem, deletePoem } from '../src/services/database';
 import { Fonts } from '../android/app/src/constants/fonts';
 import { SearchBar } from 'react-native-elements';
+import { useFocusEffect } from '@react-navigation/native';
 
 const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
   const colorScheme = useColorScheme();
@@ -17,8 +18,7 @@ const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filteredPoems, setFilteredPoems] = useState([]);
 
-  useEffect(() => {
-    const loadLikedPoems = async () => {
+    const loadLikedPoems = useCallback(async () => {
       try {
         const allLikedPoems = await getAllLikedPoem();
         setLikedPoems(allLikedPoems);
@@ -26,10 +26,14 @@ const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
       } catch (error) {
         console.error('Error loading liked poems:', error);
       }
-    };
+    }, []);
 
-    loadLikedPoems();
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadLikedPoems();
+    }, [loadLikedPoems])
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -42,7 +46,6 @@ const LikedPoem = ({ navigation, route }: { navigation: any; route: any; }) => {
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? '#f0f0f0' : '#121212',
       },
-      headerRight: () => {},
     });
   }, [navigation, route, colorScheme]);
 

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
+  Image,
   Text,
   View,
   TouchableHighlight,
@@ -9,17 +10,54 @@ import {
 } from 'react-native';
 import PoemsData from '../JsonFiles/Poems.json';
 import { Fonts } from '../android/app/src/constants/fonts';
-
+import {checkPoemExistsInDB, insertPoem, deletePoem} from '../src/services/database';
 const getNewPoem = () => PoemsData[Math.floor(Math.random() * PoemsData.length)];
+
+const SaveButton = ({
+  saved,
+  onPress,
+  colorScheme,
+}: {
+  saved: boolean;
+  onPress: () => void;
+  colorScheme: 'light' | 'dark';
+}) => {
+  const heartSource = saved
+    ? require('../assets/pictures/goldenstar.png')
+    : colorScheme === 'dark'
+    ? require('../assets/pictures/whitestar.png')
+    : require('../assets/pictures/blackstar.png');
+
+  return (
+    <TouchableHighlight
+      onPress={onPress}
+      style={styles.savedPoemButton}
+      underlayColor="transparent"
+      activeOpacity={0.6}
+    >
+      <Image
+        source={heartSource}
+        style={{ width: 30, height: 30 }}
+      />
+    </TouchableHighlight>
+  );
+};
+
 
 const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
   const colorScheme = useColorScheme();
   const [poem, setpoem] = useState(getNewPoem());
   const [fontSize, setfontSize] = useState(styles.PoemText.fontSize);
+  const [saved, setsaved] = useState(false);
 
+  // Update the navigation title when the poem changes
+  useEffect(() => {
+      navigation.setOptions({ title: poem.title });
+  }, [navigation, poem.title]);
+
+  // Update other options and headerRight based on colorScheme and saved
   useEffect(() => {
     navigation.setOptions({
-      title: route.name,
       headerTitleStyle: {
         fontFamily: Fonts.NotoSerif.Regular,
         color: colorScheme === 'light' ? '#1e1e1e' : '#f0f0f0',
@@ -28,28 +66,65 @@ const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
       headerStyle:{
           backgroundColor: colorScheme === 'light' ? '#FFF' : '#121212',
       },
+      headerRight: () => (
+        <SaveButton
+          saved={saved}
+          onPress={handleSavedPress}
+          colorScheme={colorScheme}
+        />
+      ),
     });
-  }, [navigation, route, colorScheme]);
+  }, [navigation, colorScheme, saved,handleSavedPress]);
+
+  const handleSavedPress = useCallback(() => {
+    if (!saved) {
+      insertPoem(poem.id, poem.poem, poem.author, poem.title)
+        .then(() => {
+          setsaved(true);
+        })
+        .catch((error) => {
+          console.error('Error inserting poem:', error);
+        });
+    } else {
+      deletePoem(poem.id)
+        .then(() => {
+          setsaved(false);
+        })
+        .catch((error) => {
+          console.error('Error deleting poem:', error);
+        });
+    }
+  }, [poem.author, poem.id, poem.poem, poem.title, saved]);
+
+  useEffect(() => {
+    const check = async () => {
+      try{
+        const exists = await checkPoemExistsInDB(poem.id);
+        setsaved(exists);
+      } catch(error){
+        console.error('Error checking poem existence:', error);
+      }
+    };
+    check();
+  }, [poem.id]);
 
   const handleNewPoem = () => {
     setpoem(getNewPoem());
   };
 
-  const addFontSize = () => {
+  const addFontSize = useCallback(() => {
     if (fontSize <= 25) {
-      setfontSize(fontSize + 1);
+      setfontSize((prevSize) => prevSize + 1);
     }
-  };
+  }, [fontSize]);
 
-  const reduceFontSize = () => {
+  const reduceFontSize = useCallback(() => {
     if (fontSize >= 15) {
       setfontSize(fontSize - 1);
     }
-  };
+  }, [fontSize]);
 
-  useEffect(() => {
-    navigation.setOptions({ title: poem.title });
-  }, [navigation, poem.title]);
+
 
   return (
     <View
@@ -92,7 +167,7 @@ const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
             }
             activeOpacity={0.6}
             underlayColor={colorScheme === 'light' ? 'white' : '#333333'}
-            onPress={reduceFontSize}
+            onPress={reduceFontSize} 
           >
             <Text
               style={
@@ -112,7 +187,7 @@ const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
             }
             activeOpacity={0.6}
             underlayColor={colorScheme === 'light' ? 'white' : '#333333'}
-            onPress={addFontSize}
+            onPress={addFontSize} 
           >
             <Text
               style={
@@ -275,7 +350,14 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.NotoSerif.Regular,
     color: 'white',
     fontSize: 20,
-  }
+  },
+  savedPoemButton: {
+    padding: 8,
+    borderRadius: 30,
+    minWidth: 30,
+    paddingLeft: 10,
+    right: 10,
+  },
 });
 
 export default AmazeMe;

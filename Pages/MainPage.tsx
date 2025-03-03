@@ -36,21 +36,21 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
         backgroundColor: colorScheme === 'light' ? '#ffffff' : '#121212',
       },
       // eslint-disable-next-line react/no-unstable-nested-components
-      headerRight: () => (
-        <TouchableHighlight
-          onPressIn={() => {navigation.navigate('LikedPoem');}}
-          // onPress={() => navigation.navigate("LikedPoem")}
-          underlayColor="transparent" // Optional: Prevents highlight effect
-        >
-          <Image
-            source={
-              require('../assets/pictures/redheart.png')
-            }
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{ width: 24, height: 24 }}
-          />
-        </TouchableHighlight>
-      ),
+      // headerRight: () => (
+      //   <TouchableHighlight
+      //     onPressIn={() => {navigation.navigate('LikedPoem');}}
+      //     // onPress={() => navigation.navigate("LikedPoem")}
+      //     underlayColor="transparent" // Optional: Prevents highlight effect
+      //   >
+      //     <Image
+      //       source={
+      //         require('../assets/pictures/redheart.png')
+      //       }
+      //       // eslint-disable-next-line react-native/no-inline-styles
+      //       style={{ width: 24, height: 24 }}
+      //     />
+      //   </TouchableHighlight>
+      // ),
     });
   }, [navigation, route, colorScheme]);
 
@@ -82,6 +82,19 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
         <View style={colorScheme === 'light' ? styles.button : styles.darkButton}>
           <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
             Amaze Me!
+          </Text>
+        </View>
+      </TouchableHighlight>
+
+      <TouchableHighlight
+        onPress={() => navigation.navigate('LikedPoem')}
+        style={colorScheme === 'light' ? styles.touchable_AmazeMe : styles.darkTouchable_AmazeMe}
+        underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
+        activeOpacity={0.7}
+      >
+        <View style={colorScheme === 'light' ? styles.button : styles.darkButton}>
+          <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
+            Saved Poems
           </Text>
         </View>
       </TouchableHighlight>

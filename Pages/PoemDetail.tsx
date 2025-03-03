@@ -13,31 +13,31 @@ import {checkPoemExistsInDB, insertPoem, deletePoem} from '../src/services/datab
 
 
 // Define the headerRight component outside of PoemDetail
-const LikeButton = ({
-  liked,
+const SaveButton = ({
+  saved,
   onPress,
   colorScheme,
 }: {
-  liked: boolean;
+  saved: boolean;
   onPress: () => void;
   colorScheme: 'light' | 'dark';
 }) => {
-  const heartSource = liked
-    ? require('../assets/pictures/redheart.png')
+  const heartSource = saved
+    ? require('../assets/pictures/goldenstar.png')
     : colorScheme === 'dark'
-    ? require('../assets/pictures/whiteheart.png')
-    : require('../assets/pictures/blackheart.png'); // Use black heart for light mode
+    ? require('../assets/pictures/whitestar.png')
+    : require('../assets/pictures/blackstar.png'); // Use black heart for light mode
 
   return (
     <TouchableHighlight
       onPress={onPress}
-      style={styles.likePoemButton}
+      style={styles.savedPoemButton}
       underlayColor="transparent"
       activeOpacity={0.6}
     >
       <Image
         source={heartSource}
-        style={{ width: 24, height: 24 }}
+        style={{ width: 30, height: 30 }}
       />
     </TouchableHighlight>
   );
@@ -55,7 +55,7 @@ const PoemDetail = ({
   const PoemText = Poem.poem;
   const PoemTitle = Poem.title;
   const [fontSize, setFontSize] = useState(styles.PoemText.fontSize);
-  const [liked, setLiked] = useState(false);
+  const [saved, setsaved] = useState(false);
 
   const addFontSize = useCallback(() => {
     if (fontSize <= 25) {
@@ -69,11 +69,11 @@ const PoemDetail = ({
     }
   }, [fontSize]);
 
-  const handleLikePress = useCallback(() => {
-    if (!liked) {
+  const handlesavedPress = useCallback(() => {
+    if (!saved) {
       insertPoem(Poem.id, Poem.poem, Poem.author, Poem.title)
         .then(() => {
-          setLiked(true);
+          setsaved(true);
         })
         .catch((error) => {
           console.error('Error inserting poem:', error);
@@ -81,19 +81,19 @@ const PoemDetail = ({
     } else {
       deletePoem(Poem.id)
         .then(() => {
-          setLiked(false);
+          setsaved(false);
         })
         .catch((error) => {
           console.error('Error deleting poem:', error);
         });
     }
-  }, [Poem.author, Poem.id, Poem.poem, Poem.title, liked]);
+  }, [Poem.author, Poem.id, Poem.poem, Poem.title, saved]);
 
   useEffect(() => {
     const check = async () => {
       try{
         const exists = await checkPoemExistsInDB(Poem.id);
-        setLiked(exists);
+        setsaved(exists);
       } catch(error){
         console.error('Error checking poem existence:', error);
       }
@@ -113,14 +113,14 @@ const PoemDetail = ({
         backgroundColor: colorScheme === 'light' ? 'white' : '#121212',
       },
       headerRight: () => (
-        <LikeButton
-          liked={liked}
-          onPress={handleLikePress}
+        <SaveButton
+          saved={saved}
+          onPress={handlesavedPress}
           colorScheme={colorScheme}
         />
       ),
     });
-  }, [navigation, PoemTitle, colorScheme, liked, handleLikePress]);
+  }, [navigation, PoemTitle, colorScheme, saved, handlesavedPress]);
 
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.NotoSerif.Regular,
     textAlign: 'center',
   },
-  likePoemButton: {
+  savedPoemButton: {
     padding: 8,
     borderRadius: 30,
     minWidth: 30,
