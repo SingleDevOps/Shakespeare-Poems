@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StatusBar, Image, useColorScheme, Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { StatusBar, useColorScheme, Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Fonts } from '../android/app/src/constants/fonts';
@@ -35,22 +35,6 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? '#ffffff' : '#121212',
       },
-      // eslint-disable-next-line react/no-unstable-nested-components
-      // headerRight: () => (
-      //   <TouchableHighlight
-      //     onPressIn={() => {navigation.navigate('LikedPoem');}}
-      //     // onPress={() => navigation.navigate("LikedPoem")}
-      //     underlayColor="transparent" // Optional: Prevents highlight effect
-      //   >
-      //     <Image
-      //       source={
-      //         require('../assets/pictures/redheart.png')
-      //       }
-      //       // eslint-disable-next-line react-native/no-inline-styles
-      //       style={{ width: 24, height: 24 }}
-      //     />
-      //   </TouchableHighlight>
-      // ),
     });
   }, [navigation, route, colorScheme]);
 

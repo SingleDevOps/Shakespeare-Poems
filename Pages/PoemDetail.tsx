@@ -25,7 +25,7 @@ const SaveButton = ({
   const heartSource = saved
     ? require('../assets/pictures/goldenstar.png')
     : colorScheme === 'dark'
-    ? require('../assets/pictures/whitestar.png')
+    ? require('../assets/pictures/whitestar.jpg')
     : require('../assets/pictures/blackstar.png'); // Use black heart for light mode
 
   return (
