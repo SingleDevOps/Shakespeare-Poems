@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { StatusBar, useColorScheme, Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { StatusBar, useColorScheme, Text, View, TouchableHighlight } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Fonts } from '../android/app/src/constants/fonts';
+import { Fonts } from '../../android/app/src/constants/fonts';
 import Poems from './Poems';
 import PoemDetail from './PoemDetail';
 import AmazeMe from './AmazeMe';
 import LikedPoem from './LikedPoem';
-import {createTable} from '../src/services/database';
+import {createTable} from '../../src/services/database';
+import { MainPage_Styles as styles } from '../stylesheets/MainPage_StyleSheet';
 
 const Stack = createNativeStackNavigator();
 
@@ -102,59 +103,5 @@ const MainPageContainer = () => {
   </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    flexDirection: 'column',
-  },
-  darkContainer: {
-    flex: 1,
-    backgroundColor: '#121212',
-    flexDirection: 'column',
-  },
-  button: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  darkButton: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#121212'
-  },
-  buttonText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    color: '#1e1e1e',
-    fontSize: 40,
-    textAlign: 'center',
-  },
-  darkButtonText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    color: '#f0f0f0',
-    fontSize: 40,
-    textAlign: 'center',
-  },
-  touchable_Poems: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    //     borderBottomWidth: 3,
-    //     borderColor: "gold",
-  },
-  darkTouchable_Poems: {
-    flex: 1,
-    backgroundColor: '#1f1f1f',
-  },
-  touchable_AmazeMe: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
-  darkTouchable_AmazeMe: {
-    flex: 1,
-    backgroundColor: '#1f1f1f',
-  },
-});
 
 export default MainPageContainer;

@@ -2,15 +2,14 @@ import React, { useEffect, useState, useCallback } from 'react';
 import {
   ScrollView,
   Text,
-  StyleSheet,
   View,
   TouchableHighlight,
   useColorScheme,
   Image,
 } from 'react-native';
-import { Fonts } from '../android/app/src/constants/fonts';
-import {checkPoemExistsInDB, insertPoem, deletePoem} from '../src/services/database';
-
+import { Fonts } from '../../android/app/src/constants/fonts';
+import {checkPoemExistsInDB, insertPoem, deletePoem} from '../../src/services/database';
+import { PoemDetail_styles as styles } from '../stylesheets/PoemDetail_StyleSheet';
 
 // Define the headerRight component outside of PoemDetail
 const SaveButton = ({
@@ -23,10 +22,10 @@ const SaveButton = ({
   colorScheme: 'light' | 'dark';
 }) => {
   const heartSource = saved
-    ? require('../assets/pictures/goldenstar.png')
+    ? require('../../assets/pictures/goldenstar.png')
     : colorScheme === 'dark'
-    ? require('../assets/pictures/whitestar.jpg')
-    : require('../assets/pictures/blackstar.png'); // Use black heart for light mode
+    ? require('../../assets/pictures/whitestar.jpg')
+    : require('../../assets/pictures/blackstar.png'); // Use black heart for light mode
 
   return (
     <TouchableHighlight
@@ -169,98 +168,5 @@ const PoemDetail = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  darkContainer: {
-    flex: 1,
-    backgroundColor: '#121212',
-  },
-  PoemText: {
-    fontSize: 19,
-    color: 'black',
-    fontFamily: Fonts.NotoSerif.Regular,
-    textAlign: 'center',
-    lineHeight: 26,
-  },
-  darkPoemText: {
-    fontSize: 19,
-    color: 'white',
-    fontFamily: Fonts.NotoSerif.Regular,
-    textAlign: 'center',
-    lineHeight: 26,
-  },
-  PoemTextContainer: {
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    shadowOffset: { width: 0, height: 5 },
-    flexGrow: 1,
-  },
-  darkPoemTextContainer: {
-    backgroundColor: '#121212',
-    padding: 20,
-    shadowOffset: { width: 0, height: 5 },
-    flexGrow: 1,
-  },
-  fontSizeButton: {
-    flex: 1,
-    height: 50,
-    fontSize: 19,
-    padding: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 3,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    marginHorizontal: 5,
-    elevation: 5,
-  },
-  darkFontSizeButton: {
-    flex: 1,
-    height: 50,
-    fontSize: 19,
-    padding: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 3,
-    backgroundColor: '#1f1f1f',
-    justifyContent: 'center',
-    marginHorizontal: 5,
-    elevation: 5,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 0,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  buttonText: {
-    color: 'black',
-    fontSize: 17,
-    fontFamily: Fonts.NotoSerif.Regular,
-    textAlign: 'center',
-  },
-  darkButtonText: {
-    color: 'white',
-    fontSize: 17,
-    fontFamily: Fonts.NotoSerif.Regular,
-    textAlign: 'center',
-  },
-  savedPoemButton: {
-    padding: 8,
-    borderRadius: 30,
-    minWidth: 30,
-    paddingLeft: 10,
-    right: 10,
-  },
-});
 
 export default PoemDetail;

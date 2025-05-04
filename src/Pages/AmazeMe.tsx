@@ -5,12 +5,12 @@ import {
   View,
   TouchableHighlight,
   ScrollView,
-  StyleSheet,
   useColorScheme,
 } from 'react-native';
-import PoemsData from '../JsonFiles/Poems.json';
-import { Fonts } from '../android/app/src/constants/fonts';
-import {checkPoemExistsInDB, insertPoem, deletePoem} from '../src/services/database';
+import PoemsData from '../../JsonFiles/Poems.json';
+import { Fonts } from '../../android/app/src/constants/fonts';
+import {checkPoemExistsInDB, insertPoem, deletePoem} from '../../src/services/database';
+import {AmazeMe_Styles as styles} from '../stylesheets/AmazeMe_StyleSheet';
 const getNewPoem = () => PoemsData[Math.floor(Math.random() * PoemsData.length)];
 
 const SaveButton = ({
@@ -23,10 +23,10 @@ const SaveButton = ({
   colorScheme: 'light' | 'dark';
 }) => {
   const heartSource = saved
-    ? require('../assets/pictures/goldenstar.png')
+    ? require('../../assets/pictures/goldenstar.png')
     : colorScheme === 'dark'
-    ? require('../assets/pictures/whitestar.jpg')
-    : require('../assets/pictures/blackstar.png');
+    ? require('../../assets/pictures/whitestar.jpg')
+    : require('../../assets/pictures/blackstar.png');
 
   return (
     <TouchableHighlight
@@ -44,7 +44,7 @@ const SaveButton = ({
 };
 
 
-const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
+const AmazeMe = ({ navigation }: { navigation: any}) => {
   const colorScheme = useColorScheme();
   const [poem, setpoem] = useState(getNewPoem());
   const [fontSize, setfontSize] = useState(styles.PoemText.fontSize);
@@ -225,139 +225,5 @@ const AmazeMe = ({ navigation, route }: { navigation: any; route: any }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-    padding: 10,
-  },
-  darkContainer: {
-    flex: 1,
-    backgroundColor: '#121212',
-    padding: 10,
-  },
-  PoemText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    fontSize: 19,
-    color: 'black',
-    textAlign: 'center',
-    lineHeight: 26,
-  },
-  darkPoemText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    fontSize: 19,
-    color: 'white',
-    textAlign: 'center',
-    lineHeight: 26,
-  },
-  PoemTextContainer: {
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    flexGrow: 1,
-    marginBottom: 10,
-  },
-  darkPoemTextContainer: {
-    backgroundColor: '#121212',
-    padding: 20,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    flexGrow: 1,
-    marginBottom: 10,
-  },
-  allButtonsContainer: {
-    marginTop: 10,
-    paddingBottom: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-    marginBottom: 15,
-  },
-  buttonText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    color: 'black',
-    fontSize: 17,
-    textAlign: 'center',
-  },
-  darkButtonText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    color: 'white',
-    fontSize: 17,
-    textAlign: 'center',
-  },
-  fontSizeButton: {
-    flex: 1,
-    height: 40,
-    fontSize: 19,
-    padding: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    marginHorizontal: 5,
-    elevation: 5,
-  },
-  darkFontSizeButton: {
-    flex: 1,
-    height: 40,
-    fontSize: 19,
-    padding: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-    backgroundColor: '#1f1f1f',
-    justifyContent: 'center',
-    marginHorizontal: 5,
-    elevation: 5,
-  },
-  getNewPoemButton: {
-    backgroundColor: '#1F1F1F',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    alignSelf: 'center',
-    width: 370,
-    marginTop: -2,
-  },
-  darkGetNewPoemButton: {
-    backgroundColor: '#43464b',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    alignSelf: 'center',
-    width: 370,
-    marginTop: -2,
-  },
-  getNewPoemButtonText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    color: 'white',
-    fontSize: 20,
-  },
-  darkGetNewPoemButtonText: {
-    fontFamily: Fonts.NotoSerif.Regular,
-    color: 'white',
-    fontSize: 20,
-  },
-  savedPoemButton: {
-    padding: 8,
-    borderRadius: 30,
-    minWidth: 30,
-    paddingLeft: 10,
-    right: 10,
-  },
-});
 
 export default AmazeMe;
