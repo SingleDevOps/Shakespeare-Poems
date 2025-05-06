@@ -5,104 +5,79 @@ import {
   View,
   TouchableHighlight,
   useColorScheme,
-  Image,
 } from 'react-native';
 import { Fonts } from '../../android/app/src/constants/fonts';
-import {checkPoemExistsInDB, insertPoem, deletePoem} from '../../src/services/database';
+import { checkPoemExistsInDB, insertPoem, deletePoem } from '../../src/services/database';
 import { PoemDetail_styles as styles } from '../stylesheets/PoemDetail_StyleSheet';
+import { NavigationProps, Poem } from '../types/navigation';
+import { SaveButton } from '../components/SaveButton';
 
-// Define the headerRight component outside of PoemDetail
-const SaveButton = ({
-  saved,
-  onPress,
-  colorScheme,
-}: {
-  saved: boolean;
+interface FontSizeButtonProps {
+  label: string;
   onPress: () => void;
   colorScheme: 'light' | 'dark';
-}) => {
-  const heartSource = saved
-    ? require('../../assets/pictures/goldenstar.png')
-    : colorScheme === 'dark'
-    ? require('../../assets/pictures/whitestar.jpg')
-    : require('../../assets/pictures/blackstar.png'); // Use black heart for light mode
+}
 
-  return (
-    <TouchableHighlight
-      onPress={onPress}
-      style={styles.savedPoemButton}
-      underlayColor="transparent"
-      activeOpacity={0.6}
-    >
-      <Image
-        source={heartSource}
-        style={{ width: 30, height: 30 }}
-      />
-    </TouchableHighlight>
-  );
-};
+const FontSizeButton: React.FC<FontSizeButtonProps> = ({ label, onPress, colorScheme }) => (
+  <TouchableHighlight
+    style={colorScheme === 'light' ? styles.fontSizeButton : styles.darkFontSizeButton}
+    activeOpacity={0.6}
+    underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
+    onPress={onPress}
+  >
+    <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
+      {label}
+    </Text>
+  </TouchableHighlight>
+);
 
-const PoemDetail = ({
-  route,
-  navigation,
-}: {
-  route: any;
-  navigation: any;
-}) => {
+const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
   const colorScheme = useColorScheme();
-  const Poem = route.params.poem;
-  const PoemText = Poem.poem;
-  const PoemTitle = Poem.title;
+  const poem = route.params?.poem as Poem;
   const [fontSize, setFontSize] = useState(styles.PoemText.fontSize);
-  const [saved, setsaved] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const addFontSize = useCallback(() => {
     if (fontSize <= 25) {
-      setFontSize((prevSize) => prevSize + 1);
+      setFontSize(prevSize => prevSize + 1);
     }
   }, [fontSize]);
 
   const reduceFontSize = useCallback(() => {
     if (fontSize >= 15) {
-      setFontSize((prevSize) => prevSize - 1);
+      setFontSize(prevSize => prevSize - 1);
     }
   }, [fontSize]);
 
-  const handlesavedPress = useCallback(() => {
-    if (!saved) {
-      insertPoem(Poem.id, Poem.poem, Poem.author, Poem.title)
-        .then(() => {
-          setsaved(true);
-        })
-        .catch((error) => {
-          console.error('Error inserting poem:', error);
-        });
-    } else {
-      deletePoem(Poem.id)
-        .then(() => {
-          setsaved(false);
-        })
-        .catch((error) => {
-          console.error('Error deleting poem:', error);
-        });
+  const handleSavedPress = useCallback(async () => {
+    try {
+      if (!saved) {
+        await insertPoem(poem.id, poem.poem, poem.author, poem.title);
+        setSaved(true);
+      } else {
+        await deletePoem(poem.id);
+        setSaved(false);
+      }
+    } catch (error) {
+      console.error('Error handling poem save:', error);
     }
-  }, [Poem.author, Poem.id, Poem.poem, Poem.title, saved]);
+  }, [poem, saved]);
 
   useEffect(() => {
-    const check = async () => {
-      try{
-        const exists = await checkPoemExistsInDB(Poem.id);
-        setsaved(exists);
-      } catch(error){
+    const checkSavedStatus = async () => {
+      try {
+        const exists = await checkPoemExistsInDB(poem.id);
+        setSaved(exists);
+      } catch (error) {
         console.error('Error checking poem existence:', error);
       }
     };
-    check();
-  }, [Poem.id]);
+    checkSavedStatus();
+  }, [poem.id]);
 
   useEffect(() => {
     navigation.setOptions({
-      title: PoemTitle,
+      title: poem.title,
       headerTitleStyle: {
         fontFamily: Fonts.NotoSerif.Regular,
         color: colorScheme === 'light' ? 'black' : 'white',
@@ -114,12 +89,12 @@ const PoemDetail = ({
       headerRight: () => (
         <SaveButton
           saved={saved}
-          onPress={handlesavedPress}
-          colorScheme={colorScheme}
+          onPress={handleSavedPress}
+          colorScheme={colorScheme as 'light' | 'dark'}
         />
       ),
     });
-  }, [navigation, PoemTitle, colorScheme, saved, handlesavedPress]);
+  }, [navigation, poem.title, colorScheme, saved, handleSavedPress]);
 
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
@@ -130,7 +105,7 @@ const PoemDetail = ({
             : styles.darkPoemTextContainer
         }
       >
-        {PoemText.split('\n').map((line: string, index: number) => (
+        {poem.poem.split('\n').map((line: string, index: number) => (
           <Text
             key={index}
             style={[
@@ -144,26 +119,16 @@ const PoemDetail = ({
         ))}
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <TouchableHighlight
-          style={colorScheme === 'light' ? styles.fontSizeButton : styles.darkFontSizeButton}
-          activeOpacity={0.6}
-          underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
+        <FontSizeButton
+          label="Font Size -"
           onPress={reduceFontSize}
-        >
-          <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-            Font Size -
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={colorScheme === 'light' ? styles.fontSizeButton : styles.darkFontSizeButton}
-          activeOpacity={0.6}
-          underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
+          colorScheme={colorScheme as 'light' | 'dark'}
+        />
+        <FontSizeButton
+          label="Font Size +"
           onPress={addFontSize}
-        >
-          <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-            Font Size +
-          </Text>
-        </TouchableHighlight>
+          colorScheme={colorScheme as 'light' | 'dark'}
+        />
       </View>
     </View>
   );

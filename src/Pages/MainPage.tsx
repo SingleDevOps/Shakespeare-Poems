@@ -1,29 +1,31 @@
 import React, { useEffect } from 'react';
 import { StatusBar, useColorScheme, Text, View, TouchableHighlight } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Fonts } from '../../android/app/src/constants/fonts';
-import Poems from './Poems';
-import PoemDetail from './PoemDetail';
-import AmazeMe from './AmazeMe';
-import LikedPoem from './LikedPoem';
-import {createTable} from '../../src/services/database';
 import { MainPage_Styles as styles } from '../stylesheets/MainPage_StyleSheet';
+import { NavigationProps } from '../types/navigation';
 
-const Stack = createNativeStackNavigator();
+interface MenuButtonProps {
+  title: string;
+  onPress: () => void;
+  colorScheme: 'light' | 'dark';
+}
 
-const setupDatabase = async () => {
-  try{
-    await createTable();
-  }
-  catch(error){
-    console.log('Failed To Create Database Table');
-  }
-};
+const MenuButton: React.FC<MenuButtonProps> = ({ title, onPress, colorScheme }) => (
+  <TouchableHighlight
+    onPress={onPress}
+    style={colorScheme === 'light' ? styles.touchable_Poems : styles.darkTouchable_Poems}
+    underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
+    activeOpacity={0.7}
+  >
+    <View style={colorScheme === 'light' ? styles.button : styles.darkButton}>
+      <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
+        {title}
+      </Text>
+    </View>
+  </TouchableHighlight>
+);
 
-
-const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
-
+const MainPage: React.FC<NavigationProps> = ({ navigation, route }) => {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
@@ -39,69 +41,29 @@ const MainPage = ({ navigation, route }: { navigation: any, route: any }) => {
     });
   }, [navigation, route, colorScheme]);
 
+  const menuItems = [
+    { title: 'Poems', screen: 'Poems' },
+    { title: 'Amaze Me!', screen: 'AmazeMe' },
+    { title: 'Saved Poems', screen: 'LikedPoem' },
+  ];
+
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
       <StatusBar
         backgroundColor={colorScheme === 'light' ? '#ffffff' : '#1f1f1f'}
         showHideTransition={'fade'}
-       />
-      <TouchableHighlight
-        onPress={() => navigation.navigate('Poems')}
-        style={colorScheme === 'light' ? styles.touchable_Poems : styles.darkTouchable_Poems}
-        underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
-        activeOpacity={0.7}
-      >
-        <View style={colorScheme === 'light' ? styles.button : styles.darkButton}>
-          <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-            Poems
-          </Text>
-        </View>
-      </TouchableHighlight>
-
-      <TouchableHighlight
-        onPress={() => navigation.navigate('AmazeMe')}
-        style={colorScheme === 'light' ? styles.touchable_AmazeMe : styles.darkTouchable_AmazeMe}
-        underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
-        activeOpacity={0.7}
-      >
-        <View style={colorScheme === 'light' ? styles.button : styles.darkButton}>
-          <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-            Amaze Me!
-          </Text>
-        </View>
-      </TouchableHighlight>
-
-      <TouchableHighlight
-        onPress={() => navigation.navigate('LikedPoem')}
-        style={colorScheme === 'light' ? styles.touchable_AmazeMe : styles.darkTouchable_AmazeMe}
-        underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
-        activeOpacity={0.7}
-      >
-        <View style={colorScheme === 'light' ? styles.button : styles.darkButton}>
-          <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-            Saved Poems
-          </Text>
-        </View>
-      </TouchableHighlight>
+      />
+      {menuItems.map((item) => (
+        <MenuButton
+          key={item.screen}
+          title={item.title}
+          onPress={() => navigation.navigate(item.screen as any)}
+          colorScheme={colorScheme as 'light' | 'dark'}
+        />
+      ))}
     </View>
   );
 };
 
-const MainPageContainer = () => {
-  useEffect(()=>{
-    setupDatabase();
-  }, []);
-  return (
-  <NavigationContainer>
-    <Stack.Navigator initialRouteName="Shakespeare Poems">
-      <Stack.Screen name="Shakespeare Poems" component={MainPage} />
-      <Stack.Screen name="Poems" component={Poems} />
-      <Stack.Screen name="PoemDetail" component={PoemDetail} />
-      <Stack.Screen name="AmazeMe" component={AmazeMe} />
-      <Stack.Screen name="LikedPoem" component={LikedPoem} />
-    </Stack.Navigator>
-  </NavigationContainer>
-  );
-};
+export default MainPage;
 
-export default MainPageContainer;

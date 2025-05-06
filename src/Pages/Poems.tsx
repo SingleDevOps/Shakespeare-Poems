@@ -1,17 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar, View, Text, FlatList, TouchableHighlight, useColorScheme } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import PoemsData from '../../JsonFiles/Poems.json';
 import { Fonts } from '../../android/app/src/constants/fonts';
 import { Poems_Styles as styles } from '../stylesheets/Poems_StyleSheet';
+import { NavigationProps, Poem } from '../types/navigation';
 
-const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
+interface PoemItemProps {
+  item: Poem;
+  onPress: () => void;
+  colorScheme: 'light' | 'dark';
+}
+
+const PoemItem: React.FC<PoemItemProps> = ({ item, onPress, colorScheme }) => (
+  <TouchableHighlight
+    onPress={onPress}
+    style={colorScheme === 'light' ? styles.PoemItem : styles.darkPoemItem}
+    underlayColor={colorScheme === 'light' ? '#d3d3d3' : '#333333'}
+    activeOpacity={0.6}
+  >
+    <View>
+      <Text style={colorScheme === 'light' ? styles.PoemTitleText : styles.darkPoemTitleText}>
+        {item.title}
+      </Text>
+      <Text style={colorScheme === 'light' ? styles.PoemAuthorText : styles.darkPoemAuthorText}>
+        {item.author}
+      </Text>
+      <Text>{'\n'}</Text>
+    </View>
+  </TouchableHighlight>
+);
+
+const Poems: React.FC<NavigationProps> = ({ navigation, route }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredPoems, setFilteredPoems] = useState(PoemsData);
-
+  const [filteredPoems, setFilteredPoems] = useState<Poem[]>(
+    PoemsData.map(poem => ({ ...poem, id: poem.id.toString() }))
+  );
   const colorScheme = useColorScheme();
-
-
 
   useEffect(() => {
     navigation.setOptions({
@@ -24,26 +49,30 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? '#f0f0f0' : '#121212',
       },
-      headerRight: () => {},
     });
   }, [navigation, route, colorScheme]);
 
-
-
-
-  const handleSearch = (query: string): void => {
+  const handleSearch = useCallback((query: string): void => {
     setSearchQuery(query);
     if (query === '') {
-      setFilteredPoems(PoemsData);
+      setFilteredPoems(PoemsData.map(poem => ({ ...poem, id: poem.id.toString() })));
     } else {
-      const filtered = PoemsData.filter(Poem =>
-        Poem.title.toLowerCase().includes(query.toLowerCase()) ||
-        Poem.author.toLowerCase().includes(query.toLowerCase()) ||
-        Poem.poem.toLowerCase().includes(query.toLowerCase())
-      );
+      const filtered = PoemsData.filter(poem =>
+        poem.title.toLowerCase().includes(query.toLowerCase()) ||
+        poem.author.toLowerCase().includes(query.toLowerCase()) ||
+        poem.poem.toLowerCase().includes(query.toLowerCase())
+      ).map(poem => ({ ...poem, id: poem.id.toString() }));
       setFilteredPoems(filtered);
     }
-  };
+  }, []);
+
+  const renderItem = useCallback(({ item }: { item: Poem }) => (
+    <PoemItem
+      item={item}
+      onPress={() => navigation.navigate('PoemDetail', { poem: item })}
+      colorScheme={colorScheme as 'light' | 'dark'}
+    />
+  ), [navigation, colorScheme]);
 
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
@@ -51,7 +80,7 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
         backgroundColor={colorScheme === 'light' ? '#f0f0f0' : '#1f1f1f'}
         showHideTransition={'fade'}
         animated={true}
-       />
+      />
       <SearchBar
         placeholder="    Search Poems..."
         placeholderTextColor={colorScheme === 'light' ? 'black' : 'white'}
@@ -59,31 +88,16 @@ const Poems = ({ navigation, route }: { navigation: any, route: any }) => {
         inputContainerStyle={colorScheme === 'light' ? styles.searchInputContainer : styles.darkSearchInputContainer}
         inputStyle={colorScheme === 'light' ? styles.searchInput : styles.darkSearchInput}
         value={searchQuery}
-        onChangeText={handleSearch}
-        searchIcon={false}
+        onChangeText={(text: string) => handleSearch(text)}
+        searchIcon={{ name: 'search' }}
       />
       <FlatList
         data={filteredPoems}
-        renderItem={({ item }) => (
-          <TouchableHighlight
-            onLongPress={() => { }}
-            onPress={() => navigation.navigate('PoemDetail', { poem: item })}
-            style={colorScheme === 'light' ? styles.PoemItem : styles.darkPoemItem}
-            underlayColor={colorScheme === 'light' ? '#d3d3d3' : '#333333'}
-            activeOpacity={0.6}
-          >
-            <View>
-              <Text style={colorScheme === 'light' ? styles.PoemTitleText : styles.darkPoemTitleText}>{item.title}</Text>
-              <Text style={colorScheme === 'light' ? styles.PoemAuthorText : styles.darkPoemAuthorText}>{item.author}</Text>
-              <Text>{'\n'}</Text>
-            </View>
-          </TouchableHighlight>
-        )}
+        renderItem={renderItem}
         keyExtractor={(_item, index) => index.toString()}
       />
     </View>
   );
 };
-
 
 export default Poems;

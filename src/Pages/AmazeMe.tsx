@@ -1,28 +1,34 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Image,
   Text,
   View,
   TouchableHighlight,
   ScrollView,
   useColorScheme,
+  Image,
 } from 'react-native';
 import PoemsData from '../../JsonFiles/Poems.json';
 import { Fonts } from '../../android/app/src/constants/fonts';
-import {checkPoemExistsInDB, insertPoem, deletePoem} from '../../src/services/database';
-import {AmazeMe_Styles as styles} from '../stylesheets/AmazeMe_StyleSheet';
-const getNewPoem = () => PoemsData[Math.floor(Math.random() * PoemsData.length)];
+import { checkPoemExistsInDB, insertPoem, deletePoem } from '../../src/services/database';
+import { AmazeMe_Styles as styles } from '../stylesheets/AmazeMe_StyleSheet';
+import { NavigationProps, Poem } from '../types/navigation';
 
-const SaveButton = ({
-  saved,
-  onPress,
-  colorScheme,
-}: {
+const getNewPoem = (): Poem => {
+  const randomPoem = PoemsData[Math.floor(Math.random() * PoemsData.length)];
+  return {
+    ...randomPoem,
+    id: randomPoem.id.toString(),
+  };
+};
+
+interface StarButtonProps {
   saved: boolean;
   onPress: () => void;
   colorScheme: 'light' | 'dark';
-}) => {
-  const heartSource = saved
+}
+
+const StarButton: React.FC<StarButtonProps> = ({ saved, onPress, colorScheme }) => {
+  const starSource = saved
     ? require('../../assets/pictures/goldenstar.png')
     : colorScheme === 'dark'
     ? require('../../assets/pictures/whitestar.jpg')
@@ -35,119 +41,111 @@ const SaveButton = ({
       underlayColor="transparent"
       activeOpacity={0.6}
     >
-      <Image
-        source={heartSource}
-        style={{ width: 30, height: 30 }}
-      />
+      <Image source={starSource} style={{ width: 30, height: 30 }} />
     </TouchableHighlight>
   );
 };
 
+interface FontSizeButtonProps {
+  label: string;
+  onPress: () => void;
+  colorScheme: 'light' | 'dark';
+}
 
-const AmazeMe = ({ navigation }: { navigation: any}) => {
+const FontSizeButton: React.FC<FontSizeButtonProps> = ({ label, onPress, colorScheme }) => (
+  <TouchableHighlight
+    style={colorScheme === 'light' ? styles.fontSizeButton : styles.darkFontSizeButton}
+    activeOpacity={0.6}
+    underlayColor={colorScheme === 'light' ? 'white' : '#333333'}
+    onPress={onPress}
+  >
+    <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
+      {label}
+    </Text>
+  </TouchableHighlight>
+);
+
+const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
   const colorScheme = useColorScheme();
-  const [poem, setpoem] = useState(getNewPoem());
-  const [fontSize, setfontSize] = useState(styles.PoemText.fontSize);
-  const [saved, setsaved] = useState(false);
+  const [poem, setPoem] = useState<Poem>(getNewPoem());
+  const [fontSize, setFontSize] = useState(styles.PoemText.fontSize);
+  const [saved, setSaved] = useState(false);
 
-  // Update the navigation title when the poem changes
-  useEffect(() => {
-      navigation.setOptions({ title: poem.title });
-  }, [navigation, poem.title]);
-
-  // Update other options and headerRight based on colorScheme and saved
-  useEffect(() => {
-    navigation.setOptions({
-      headerTitleStyle: {
-        fontFamily: Fonts.NotoSerif.Regular,
-        color: colorScheme === 'light' ? '#1e1e1e' : '#f0f0f0',
-      },
-      headerTintColor: colorScheme === 'light' ? 'black' : 'red',
-      headerStyle:{
-          backgroundColor: colorScheme === 'light' ? '#FFF' : '#121212',
-      },
-      headerRight: () => (
-        <SaveButton
-          saved={saved}
-          onPress={handleSavedPress}
-          colorScheme={colorScheme}
-        />
-      ),
-    });
-  }, [navigation, colorScheme, saved,handleSavedPress]);
-
-  const handleSavedPress = useCallback(() => {
-    if (!saved) {
-      insertPoem(poem.id, poem.poem, poem.author, poem.title)
-        .then(() => {
-          setsaved(true);
-        })
-        .catch((error) => {
-          console.error('Error inserting poem:', error);
-        });
-    } else {
-      deletePoem(poem.id)
-        .then(() => {
-          setsaved(false);
-        })
-        .catch((error) => {
-          console.error('Error deleting poem:', error);
-        });
-    }
-  }, [poem.author, poem.id, poem.poem, poem.title, saved]);
-
-  useEffect(() => {
-    const check = async () => {
-      try{
-        const exists = await checkPoemExistsInDB(poem.id);
-        setsaved(exists);
-      } catch(error){
-        console.error('Error checking poem existence:', error);
+  const handleSavedPress = useCallback(async () => {
+    try {
+      if (!saved) {
+        await insertPoem(poem.id, poem.poem, poem.author, poem.title);
+        setSaved(true);
+      } else {
+        await deletePoem(poem.id);
+        setSaved(false);
       }
-    };
-    check();
-  }, [poem.id]);
+    } catch (error) {
+      console.error('Error handling poem save:', error);
+    }
+  }, [poem, saved]);
 
-  const handleNewPoem = () => {
-    setpoem(getNewPoem());
-  };
+  const handleNewPoem = useCallback(() => {
+    setPoem(getNewPoem());
+  }, []);
 
   const addFontSize = useCallback(() => {
     if (fontSize <= 25) {
-      setfontSize((prevSize) => prevSize + 1);
+      setFontSize(prevSize => prevSize + 1);
     }
   }, [fontSize]);
 
   const reduceFontSize = useCallback(() => {
     if (fontSize >= 15) {
-      setfontSize(fontSize - 1);
+      setFontSize(prevSize => prevSize - 1);
     }
   }, [fontSize]);
 
+  useEffect(() => {
+    const checkSavedStatus = async () => {
+      try {
+        const exists = await checkPoemExistsInDB(poem.id);
+        setSaved(exists);
+      } catch (error) {
+        console.error('Error checking poem existence:', error);
+      }
+    };
+    checkSavedStatus();
+  }, [poem.id]);
 
+  useEffect(() => {
+    navigation.setOptions({
+      title: poem.title,
+      headerTitleStyle: {
+        fontFamily: Fonts.NotoSerif.Regular,
+        color: colorScheme === 'light' ? '#1e1e1e' : '#f0f0f0',
+      },
+      headerTintColor: colorScheme === 'light' ? 'black' : 'red',
+      headerStyle: {
+        backgroundColor: colorScheme === 'light' ? '#FFF' : '#121212',
+      },
+      headerRight: () => (
+        <StarButton
+          saved={saved}
+          onPress={handleSavedPress}
+          colorScheme={colorScheme as 'light' | 'dark'}
+        />
+      ),
+    });
+  }, [navigation, poem.title, colorScheme, saved, handleSavedPress]);
 
   return (
-    <View
-      style={
-        colorScheme === 'light'
-          ? styles.container
-          : styles.darkContainer
-      }
-    >
+    <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
       <ScrollView
         contentContainerStyle={
-          colorScheme === 'light'
-            ? styles.PoemTextContainer
-            : styles.darkPoemTextContainer
+          colorScheme === 'light' ? styles.PoemTextContainer : styles.darkPoemTextContainer
         }
       >
         {poem.poem.split('\n').map((line: string, index: number) => (
           <Text
             key={index}
             style={[
-              colorScheme === 'light'
-                ? styles.PoemText
-                : styles.darkPoemText,
+              colorScheme === 'light' ? styles.PoemText : styles.darkPoemText,
               { fontSize },
             ]}
           >
@@ -159,46 +157,16 @@ const AmazeMe = ({ navigation }: { navigation: any}) => {
 
       <View style={styles.allButtonsContainer}>
         <View style={styles.buttonContainer}>
-          <TouchableHighlight
-            style={
-              colorScheme === 'light'
-                ? styles.fontSizeButton
-                : styles.darkFontSizeButton
-            }
-            activeOpacity={0.6}
-            underlayColor={colorScheme === 'light' ? 'white' : '#333333'}
-            onPress={reduceFontSize} 
-          >
-            <Text
-              style={
-                colorScheme === 'light'
-                  ? styles.buttonText
-                  : styles.darkButtonText
-              }
-            >
-              Font Size -
-            </Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={
-              colorScheme === 'light'
-                ? styles.fontSizeButton
-                : styles.darkFontSizeButton
-            }
-            activeOpacity={0.6}
-            underlayColor={colorScheme === 'light' ? 'white' : '#333333'}
-            onPress={addFontSize} 
-          >
-            <Text
-              style={
-                colorScheme === 'light'
-                  ? styles.buttonText
-                  : styles.darkButtonText
-              }
-            >
-              Font Size +
-            </Text>
-          </TouchableHighlight>
+          <FontSizeButton
+            label="Font Size -"
+            onPress={reduceFontSize}
+            colorScheme={colorScheme as 'light' | 'dark'}
+          />
+          <FontSizeButton
+            label="Font Size +"
+            onPress={addFontSize}
+            colorScheme={colorScheme as 'light' | 'dark'}
+          />
         </View>
 
         <TouchableHighlight
@@ -224,6 +192,5 @@ const AmazeMe = ({ navigation }: { navigation: any}) => {
     </View>
   );
 };
-
 
 export default AmazeMe;
