@@ -12,6 +12,7 @@ import { Fonts } from '../../android/app/src/constants/fonts';
 import { checkPoemExistsInDB, insertPoem, deletePoem } from '../../src/services/database';
 import { AmazeMe_Styles as styles } from '../stylesheets/AmazeMe_StyleSheet';
 import { NavigationProps, Poem } from '../types/navigation';
+import { SelectablePoemText } from '../components/SelectablePoemText';
 
 const getNewPoem = (): Poem => {
   const randomPoem = PoemsData[Math.floor(Math.random() * PoemsData.length)];
@@ -141,18 +142,11 @@ const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
           colorScheme === 'light' ? styles.PoemTextContainer : styles.darkPoemTextContainer
         }
       >
-        {poem.poem.split('\n').map((line: string, index: number) => (
-          <Text
-            key={index}
-            style={[
-              colorScheme === 'light' ? styles.PoemText : styles.darkPoemText,
-              { fontSize },
-            ]}
-          >
-            {line}
-            {'\n'}
-          </Text>
-        ))}
+        <SelectablePoemText
+          text={poem.poem}
+          fontSize={fontSize}
+          colorScheme={colorScheme as 'light' | 'dark'}
+        />
       </ScrollView>
 
       <View style={styles.allButtonsContainer}>

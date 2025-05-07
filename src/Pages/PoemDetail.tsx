@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
   ScrollView,
-  Text,
   View,
   useColorScheme,
 } from 'react-native';
@@ -12,6 +11,7 @@ import { SaveButton } from '../components/SaveButton';
 import FontSizeButton from '../components/FontSizeButton';
 import { usePoemSave } from '../hooks/usePoemSave';
 import { useFontSize } from '../hooks/useFontSize';
+import { SelectablePoemText } from '../components/SelectablePoemText';
 
 const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
   const colorScheme = useColorScheme();
@@ -49,18 +49,12 @@ const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
             : styles.darkPoemTextContainer
         }
       >
-        {poem.poem.split('\n').map((line: string, index: number) => (
-          <Text
-            key={index}
-            style={[
-              colorScheme === 'light' ? styles.PoemText : styles.darkPoemText,
-              { fontSize },
-            ]}
-          >
-            {line}
-            {'\n'}
-          </Text>
-        ))}
+        <SelectablePoemText
+          text={poem.poem}
+          fontSize={fontSize}
+          colorScheme={colorScheme as 'light' | 'dark'}
+          style={colorScheme === 'light' ? styles.PoemText : styles.darkPoemText}
+        />
       </ScrollView>
       <View style={styles.buttonContainer}>
         <FontSizeButton
