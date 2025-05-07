@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import {
   ScrollView,
   Text,
@@ -6,55 +6,18 @@ import {
   useColorScheme,
 } from 'react-native';
 import { Fonts } from '../../android/app/src/constants/fonts';
-import { checkPoemExistsInDB, insertPoem, deletePoem } from '../../src/services/database';
 import { PoemDetail_styles as styles } from '../stylesheets/PoemDetail_StyleSheet';
 import { NavigationProps, Poem } from '../types/navigation';
 import { SaveButton } from '../components/SaveButton';
 import FontSizeButton from '../components/FontSizeButton';
+import { usePoemSave } from '../hooks/usePoemSave';
+import { useFontSize } from '../hooks/useFontSize';
 
 const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
   const colorScheme = useColorScheme();
   const poem = route.params?.poem as Poem;
-  const [fontSize, setFontSize] = useState(styles.PoemText.fontSize);
-  const [saved, setSaved] = useState(false);
-
-  const addFontSize = useCallback(() => {
-    if (fontSize <= 25) {
-      setFontSize(prevSize => prevSize + 1);
-    }
-  }, [fontSize]);
-
-  const reduceFontSize = useCallback(() => {
-    if (fontSize >= 15) {
-      setFontSize(prevSize => prevSize - 1);
-    }
-  }, [fontSize]);
-
-  const handleSavedPress = useCallback(async () => {
-    try {
-      if (!saved) {
-        await insertPoem(poem.id, poem.poem, poem.author, poem.title);
-        setSaved(true);
-      } else {
-        await deletePoem(poem.id);
-        setSaved(false);
-      }
-    } catch (error) {
-      console.error('Error handling poem save:', error);
-    }
-  }, [poem, saved]);
-
-  useEffect(() => {
-    const checkSavedStatus = async () => {
-      try {
-        const exists = await checkPoemExistsInDB(poem.id);
-        setSaved(exists);
-      } catch (error) {
-        console.error('Error checking poem existence:', error);
-      }
-    };
-    checkSavedStatus();
-  }, [poem.id]);
+  const { saved, handleSavedPress } = usePoemSave(poem);
+  const { fontSize, addFontSize, reduceFontSize } = useFontSize(styles.PoemText.fontSize);
 
   useEffect(() => {
     navigation.setOptions({
