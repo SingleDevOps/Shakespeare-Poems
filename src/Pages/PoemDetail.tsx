@@ -3,7 +3,6 @@ import {
   ScrollView,
   Text,
   View,
-  TouchableHighlight,
   useColorScheme,
 } from 'react-native';
 import { Fonts } from '../../android/app/src/constants/fonts';
@@ -11,25 +10,7 @@ import { checkPoemExistsInDB, insertPoem, deletePoem } from '../../src/services/
 import { PoemDetail_styles as styles } from '../stylesheets/PoemDetail_StyleSheet';
 import { NavigationProps, Poem } from '../types/navigation';
 import { SaveButton } from '../components/SaveButton';
-
-interface FontSizeButtonProps {
-  label: string;
-  onPress: () => void;
-  colorScheme: 'light' | 'dark';
-}
-
-const FontSizeButton: React.FC<FontSizeButtonProps> = ({ label, onPress, colorScheme }) => (
-  <TouchableHighlight
-    style={colorScheme === 'light' ? styles.fontSizeButton : styles.darkFontSizeButton}
-    activeOpacity={0.6}
-    underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
-    onPress={onPress}
-  >
-    <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-      {label}
-    </Text>
-  </TouchableHighlight>
-);
+import FontSizeButton from '../components/FontSizeButton';
 
 const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
   const colorScheme = useColorScheme();
