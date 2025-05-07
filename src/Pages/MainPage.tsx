@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StatusBar, useColorScheme, View } from 'react-native';
+import { StatusBar, useColorScheme, View, Text } from 'react-native';
 import { Fonts } from '../../android/app/src/constants/fonts';
 import { MainPage_Styles as styles } from '../stylesheets/MainPage_StyleSheet';
 import { NavigationProps } from '../types/navigation';
@@ -22,9 +22,9 @@ const MainPage: React.FC<NavigationProps> = ({ navigation, route }) => {
   }, [navigation, route, colorScheme]);
 
   const menuItems = [
-    { title: 'Poems', screen: 'Poems' },
-    { title: 'Amaze Me!', screen: 'AmazeMe' },
-    { title: 'Saved Poems', screen: 'LikedPoem' },
+    { title: 'Poems', screen: 'Poems', description: 'Explore Shakespeare\'s timeless verses' },
+    { title: 'Amaze Me!', screen: 'AmazeMe', description: 'Discover random poetic gems' },
+    { title: 'Saved Poems', screen: 'LikedPoem', description: 'Your collection of favorites' },
   ];
 
   return (
@@ -33,14 +33,19 @@ const MainPage: React.FC<NavigationProps> = ({ navigation, route }) => {
         backgroundColor={colorScheme === 'light' ? '#ffffff' : '#1f1f1f'}
         showHideTransition={'fade'}
       />
-      {menuItems.map((item) => (
-        <MenuButton
-          key={item.screen}
-          title={item.title}
-          onPress={() => navigation.navigate(item.screen as any)}
-          colorScheme={colorScheme as 'light' | 'dark'}
-        />
-      ))}
+
+
+      <View style={styles.menuContainer}>
+        {menuItems.map((item) => (
+          <MenuButton
+            key={item.screen}
+            title={item.title}
+            description={item.description}
+            onPress={() => navigation.navigate(item.screen as any)}
+            colorScheme={colorScheme as 'light' | 'dark'}
+          />
+        ))}
+      </View>
     </View>
   );
 };
