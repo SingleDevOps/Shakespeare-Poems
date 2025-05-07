@@ -1,37 +1,26 @@
 import React from 'react';
-import { TouchableHighlight, Text, View } from 'react-native';
+import { Text, View, TouchableHighlight } from 'react-native';
 import { MainPage_Styles as styles } from '../stylesheets/MainPage_StyleSheet';
 
 interface MenuButtonProps {
   title: string;
-  description?: string;
   onPress: () => void;
   colorScheme: 'light' | 'dark';
 }
 
-const MenuButton: React.FC<MenuButtonProps> = ({ title, description, onPress, colorScheme }) => {
-  return (
-    <TouchableHighlight
-      style={colorScheme === 'light' ? styles.button : styles.darkButton}
-      onPress={onPress}
-      underlayColor={colorScheme === 'light' ? '#f0f0f0' : '#2a2a2a'}
-    >
-      <View>
-        <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-          {title}
-        </Text>
-        {description && (
-          <Text
-            style={
-              colorScheme === 'light' ? styles.buttonDescription : styles.darkButtonDescription
-            }
-          >
-            {description}
-          </Text>
-        )}
-      </View>
-    </TouchableHighlight>
-  );
-};
+const MenuButton: React.FC<MenuButtonProps> = ({ title, onPress, colorScheme }) => (
+  <TouchableHighlight
+    onPress={onPress}
+    style={colorScheme === 'light' ? styles.touchable_Poems : styles.darkTouchable_Poems}
+    underlayColor={colorScheme === 'light' ? '#e0e0e0' : '#333333'}
+    activeOpacity={0.7}
+  >
+    <View style={colorScheme === 'light' ? styles.button : styles.darkButton}>
+      <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
+        {title}
+      </Text>
+    </View>
+  </TouchableHighlight>
+);
 
 export default MenuButton; 
