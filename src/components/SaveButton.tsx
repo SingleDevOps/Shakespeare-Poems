@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     right: 10,
   },
-}); 
+});

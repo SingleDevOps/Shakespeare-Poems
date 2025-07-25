@@ -18,6 +18,6 @@ export const useFontSize = (initialSize: number, minSize: number = 15, maxSize: 
   return {
     fontSize,
     addFontSize,
-    reduceFontSize
+    reduceFontSize,
   };
-}; 
+};

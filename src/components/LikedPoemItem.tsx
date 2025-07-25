@@ -35,4 +35,4 @@ const LikedPoemItem: React.FC<LikedPoemItemProps> = ({
   </TouchableHighlight>
 );
 
-export default LikedPoemItem; 
+export default LikedPoemItem;

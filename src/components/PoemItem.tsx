@@ -28,4 +28,4 @@ const PoemItem: React.FC<PoemItemProps> = ({ item, onPress, colorScheme }) => (
   </TouchableHighlight>
 );
 
-export default PoemItem; 
+export default PoemItem;

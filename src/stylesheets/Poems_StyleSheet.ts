@@ -85,4 +85,3 @@ export const Poems_Styles = StyleSheet.create({
       color: 'white',
     },
   });
-  

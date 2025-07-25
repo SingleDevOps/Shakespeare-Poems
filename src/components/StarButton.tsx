@@ -27,4 +27,4 @@ const StarButton: React.FC<StarButtonProps> = ({ saved, onPress, colorScheme }) 
   );
 };
 
-export default StarButton; 
+export default StarButton;

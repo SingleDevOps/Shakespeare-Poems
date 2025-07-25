@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, useColorScheme } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { Fonts } from '../../android/app/src/constants/fonts';
 
 interface SelectablePoemTextProps {
@@ -25,7 +25,7 @@ export const SelectablePoemText: React.FC<SelectablePoemTextProps> = ({
         styles.text,
         colorScheme === 'light' ? styles.lightText : styles.darkText,
         { fontSize },
-        style
+        style,
       ]}
     >
       {formattedText}
@@ -45,4 +45,4 @@ const styles = StyleSheet.create({
   darkText: {
     color: 'white',
   },
-}); 
+});

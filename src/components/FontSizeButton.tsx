@@ -21,4 +21,4 @@ const FontSizeButton: React.FC<FontSizeButtonProps> = ({ label, onPress, colorSc
   </TouchableHighlight>
 );
 
-export default FontSizeButton; 
+export default FontSizeButton;

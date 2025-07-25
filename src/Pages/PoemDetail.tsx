@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   ScrollView,
   View,
@@ -19,6 +19,14 @@ const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
   const { saved, handleSavedPress } = usePoemSave(poem);
   const { fontSize, addFontSize, reduceFontSize } = useFontSize(styles.PoemText.fontSize);
 
+  const headerRight = useCallback(() => (
+    <SaveButton
+      saved={saved}
+      onPress={handleSavedPress}
+      colorScheme={colorScheme as 'light' | 'dark'}
+    />
+  ), [saved, handleSavedPress, colorScheme]);
+
   useEffect(() => {
     navigation.setOptions({
       title: poem.title,
@@ -30,15 +38,9 @@ const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? 'white' : '#121212',
       },
-      headerRight: () => (
-        <SaveButton
-          saved={saved}
-          onPress={handleSavedPress}
-          colorScheme={colorScheme as 'light' | 'dark'}
-        />
-      ),
+      headerRight,
     });
-  }, [navigation, poem.title, colorScheme, saved, handleSavedPress]);
+  }, [navigation, poem.title, colorScheme, headerRight]);
 
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
@@ -53,7 +55,10 @@ const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
           text={poem.poem}
           fontSize={fontSize}
           colorScheme={colorScheme as 'light' | 'dark'}
-          style={colorScheme === 'light' ? styles.PoemText : styles.darkPoemText}
+          style={[
+            colorScheme === 'light' ? styles.PoemText : styles.darkPoemText,
+            { fontSize: fontSize },
+          ]}
         />
       </ScrollView>
       <View style={styles.buttonContainer}>

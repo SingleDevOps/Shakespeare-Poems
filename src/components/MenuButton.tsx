@@ -23,4 +23,4 @@ const MenuButton: React.FC<MenuButtonProps> = ({ title, onPress, colorScheme }) 
   </TouchableHighlight>
 );
 
-export default MenuButton; 
+export default MenuButton;
