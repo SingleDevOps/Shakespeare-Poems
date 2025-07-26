@@ -30,6 +30,6 @@ export const useLikedPoems = () => {
     likedPoems,
     loadLikedPoems,
     handleUnlike,
-    setLikedPoems
+    setLikedPoems,
   };
-}; 
+};

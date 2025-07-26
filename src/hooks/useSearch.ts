@@ -24,6 +24,6 @@ export const useSearch = (items: Poem[]) => {
     searchQuery,
     filteredItems,
     handleSearch,
-    setFilteredItems
+    setFilteredItems,
   };
-}; 
+};

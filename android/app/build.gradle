@@ -80,8 +80,8 @@ android {
         applicationId "com.Shakespeare_Poems"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 12
+        versionName "1.0.12"
     }
     signingConfigs {
         debug {
