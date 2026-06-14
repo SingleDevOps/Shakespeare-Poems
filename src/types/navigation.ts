@@ -6,10 +6,11 @@ export interface Poem {
   title: string;
   author: string;
   poem: string;
+  like?: boolean;
 }
 
 export type RootStackParamList = {
-  MainPage: undefined;
+  'Shakespeare Poems': undefined;
   Poems: undefined;
   PoemDetail: { poem: Poem };
   AmazeMe: undefined;
@@ -19,4 +20,4 @@ export type RootStackParamList = {
 export type NavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
   route: RouteProp<RootStackParamList, keyof RootStackParamList>;
-}; 
+};
