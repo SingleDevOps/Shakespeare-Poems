@@ -21,7 +21,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ saved, onPress, colorSch
       underlayColor="transparent"
       activeOpacity={0.6}
     >
-      <Image source={starSource} style={{ width: 30, height: 30 }} />
+      <Image source={starSource} style={styles.starImage} />
     </TouchableHighlight>
   );
 };
@@ -33,5 +33,9 @@ const styles = StyleSheet.create({
     minWidth: 30,
     paddingLeft: 10,
     right: 10,
+  },
+  starImage: {
+    width: 30,
+    height: 30,
   },
 });

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Fonts } from '../../android/app/src/constants/fonts';
+import { Fonts } from '../constants/fonts';
 
 export const PoemDetail_styles = StyleSheet.create({
   container: {
@@ -27,19 +27,26 @@ export const PoemDetail_styles = StyleSheet.create({
   PoemTextContainer: {
     backgroundColor: '#FFFFFF',
     padding: 20,
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
     flexGrow: 1,
   },
   darkPoemTextContainer: {
     backgroundColor: '#121212',
     padding: 20,
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
     flexGrow: 1,
   },
   fontSizeButton: {
     flex: 1,
     height: 50,
-    fontSize: 19,
     padding: 5,
     borderRadius: 5,
     alignItems: 'center',
@@ -53,7 +60,6 @@ export const PoemDetail_styles = StyleSheet.create({
   darkFontSizeButton: {
     flex: 1,
     height: 50,
-    fontSize: 19,
     padding: 5,
     borderRadius: 5,
     alignItems: 'center',

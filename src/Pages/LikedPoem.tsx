@@ -4,7 +4,7 @@ import {
   FlatList,
   useColorScheme,
 } from 'react-native';
-import { Fonts } from '../../android/app/src/constants/fonts';
+import { Fonts } from '../constants/fonts';
 import { SearchBar } from 'react-native-elements';
 import { useFocusEffect } from '@react-navigation/native';
 import { LikedPoem_Styles as styles } from '../stylesheets/LikedPoem_StyleSheet';
@@ -14,17 +14,16 @@ import { useSearch } from '../hooks/useSearch';
 import { useLikedPoems } from '../hooks/useLikedPoems';
 
 const LikedPoem: React.FC<NavigationProps> = ({ navigation, route }) => {
-  const colorScheme = useColorScheme();
-  const { likedPoems, loadLikedPoems, handleUnlike, setLikedPoems } = useLikedPoems();
+  const colorScheme = useColorScheme() ?? 'light';
+  const { likedPoems, loadLikedPoems, handleUnlike } = useLikedPoems();
   const { searchQuery, filteredItems: filteredPoems, handleSearch, setFilteredItems } = useSearch(likedPoems);
 
   useFocusEffect(
     useCallback(() => {
       loadLikedPoems().then(poems => {
-        setLikedPoems(poems);
         setFilteredItems(poems);
       });
-    }, [loadLikedPoems, setLikedPoems, setFilteredItems])
+    }, [loadLikedPoems, setFilteredItems]),
   );
 
   useEffect(() => {
@@ -46,12 +45,13 @@ const LikedPoem: React.FC<NavigationProps> = ({ navigation, route }) => {
       item={item}
       onPress={() => navigation.navigate('PoemDetail', { poem: item })}
       onLongPress={() => handleUnlike(item.id)}
-      colorScheme={colorScheme as 'light' | 'dark'}
+      colorScheme={colorScheme}
     />
   ), [navigation, handleUnlike, colorScheme]);
 
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
+      {/* @ts-expect-error react-native-elements SearchBar type issue */}
       <SearchBar
         placeholder="    Search Liked Poems..."
         placeholderTextColor={colorScheme === 'light' ? 'black' : 'white'}

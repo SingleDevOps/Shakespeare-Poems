@@ -4,7 +4,7 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import { Fonts } from '../../android/app/src/constants/fonts';
+import { Fonts } from '../constants/fonts';
 import { PoemDetail_styles as styles } from '../stylesheets/PoemDetail_StyleSheet';
 import { NavigationProps, Poem } from '../types/navigation';
 import { SaveButton } from '../components/SaveButton';
@@ -14,7 +14,7 @@ import { useFontSize } from '../hooks/useFontSize';
 import { SelectablePoemText } from '../components/SelectablePoemText';
 
 const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() ?? 'light';
   const poem = route.params?.poem as Poem;
   const { saved, handleSavedPress } = usePoemSave(poem);
   const { fontSize, addFontSize, reduceFontSize } = useFontSize(styles.PoemText.fontSize);
@@ -23,7 +23,7 @@ const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
     <SaveButton
       saved={saved}
       onPress={handleSavedPress}
-      colorScheme={colorScheme as 'light' | 'dark'}
+      colorScheme={colorScheme}
     />
   ), [saved, handleSavedPress, colorScheme]);
 
@@ -54,10 +54,10 @@ const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
         <SelectablePoemText
           text={poem.poem}
           fontSize={fontSize}
-          colorScheme={colorScheme as 'light' | 'dark'}
+          colorScheme={colorScheme}
           style={[
             colorScheme === 'light' ? styles.PoemText : styles.darkPoemText,
-            { fontSize: fontSize },
+            { fontSize },
           ]}
         />
       </ScrollView>
@@ -65,12 +65,12 @@ const PoemDetail: React.FC<NavigationProps> = ({ route, navigation }) => {
         <FontSizeButton
           label="Font Size -"
           onPress={reduceFontSize}
-          colorScheme={colorScheme as 'light' | 'dark'}
+          colorScheme={colorScheme}
         />
         <FontSizeButton
           label="Font Size +"
           onPress={addFontSize}
-          colorScheme={colorScheme as 'light' | 'dark'}
+          colorScheme={colorScheme}
         />
       </View>
     </View>

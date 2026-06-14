@@ -1,42 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StatusBar, View, Text, FlatList, TouchableHighlight, useColorScheme } from 'react-native';
+import { StatusBar, View, FlatList, useColorScheme } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import PoemsData from '../../JsonFiles/Poems.json';
-import { Fonts } from '../../android/app/src/constants/fonts';
+import { Fonts } from '../constants/fonts';
 import { Poems_Styles as styles } from '../stylesheets/Poems_StyleSheet';
 import { NavigationProps, Poem } from '../types/navigation';
+import PoemItem from '../components/PoemItem';
 
-interface PoemItemProps {
-  item: Poem;
-  onPress: () => void;
-  colorScheme: 'light' | 'dark';
-}
-
-const PoemItem: React.FC<PoemItemProps> = ({ item, onPress, colorScheme }) => (
-  <TouchableHighlight
-    onPress={onPress}
-    style={colorScheme === 'light' ? styles.PoemItem : styles.darkPoemItem}
-    underlayColor={colorScheme === 'light' ? '#d3d3d3' : '#333333'}
-    activeOpacity={0.6}
-  >
-    <View>
-      <Text style={colorScheme === 'light' ? styles.PoemTitleText : styles.darkPoemTitleText}>
-        {item.title}
-      </Text>
-      <Text style={colorScheme === 'light' ? styles.PoemAuthorText : styles.darkPoemAuthorText}>
-        {item.author}
-      </Text>
-      <Text>{'\n'}</Text>
-    </View>
-  </TouchableHighlight>
-);
+const allPoems: Poem[] = PoemsData.map(poem => ({ ...poem, id: poem.id.toString() }));
 
 const Poems: React.FC<NavigationProps> = ({ navigation, route }) => {
+  const colorScheme = useColorScheme() ?? 'light';
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredPoems, setFilteredPoems] = useState<Poem[]>(
-    PoemsData.map(poem => ({ ...poem, id: poem.id.toString() }))
-  );
-  const colorScheme = useColorScheme();
+  const [filteredPoems, setFilteredPoems] = useState<Poem[]>(allPoems);
 
   useEffect(() => {
     navigation.setOptions({
@@ -52,16 +28,17 @@ const Poems: React.FC<NavigationProps> = ({ navigation, route }) => {
     });
   }, [navigation, route, colorScheme]);
 
-  const handleSearch = useCallback((query: string): void => {
-    setSearchQuery(query);
-    if (query === '') {
-      setFilteredPoems(PoemsData.map(poem => ({ ...poem, id: poem.id.toString() })));
+  const handleSearch = useCallback((query?: string): void => {
+    const q = query ?? '';
+    setSearchQuery(q);
+    if (q === '') {
+      setFilteredPoems(allPoems);
     } else {
-      const filtered = PoemsData.filter(poem =>
-        poem.title.toLowerCase().includes(query.toLowerCase()) ||
-        poem.author.toLowerCase().includes(query.toLowerCase()) ||
-        poem.poem.toLowerCase().includes(query.toLowerCase())
-      ).map(poem => ({ ...poem, id: poem.id.toString() }));
+      const filtered = allPoems.filter(poem =>
+        poem.title.toLowerCase().includes(q.toLowerCase()) ||
+        poem.author.toLowerCase().includes(q.toLowerCase()) ||
+        poem.poem.toLowerCase().includes(q.toLowerCase()),
+      );
       setFilteredPoems(filtered);
     }
   }, []);
@@ -70,7 +47,7 @@ const Poems: React.FC<NavigationProps> = ({ navigation, route }) => {
     <PoemItem
       item={item}
       onPress={() => navigation.navigate('PoemDetail', { poem: item })}
-      colorScheme={colorScheme as 'light' | 'dark'}
+      colorScheme={colorScheme}
     />
   ), [navigation, colorScheme]);
 
@@ -81,6 +58,7 @@ const Poems: React.FC<NavigationProps> = ({ navigation, route }) => {
         showHideTransition={'fade'}
         animated={true}
       />
+      {/* @ts-expect-error react-native-elements SearchBar type issue */}
       <SearchBar
         placeholder="    Search Poems..."
         placeholderTextColor={colorScheme === 'light' ? 'black' : 'white'}
@@ -88,13 +66,13 @@ const Poems: React.FC<NavigationProps> = ({ navigation, route }) => {
         inputContainerStyle={colorScheme === 'light' ? styles.searchInputContainer : styles.darkSearchInputContainer}
         inputStyle={colorScheme === 'light' ? styles.searchInput : styles.darkSearchInput}
         value={searchQuery}
-        onChangeText={(text: string) => handleSearch(text)}
+        onChangeText={handleSearch}
         searchIcon={{ name: 'search' }}
       />
       <FlatList
         data={filteredPoems}
         renderItem={renderItem}
-        keyExtractor={(_item, index) => index.toString()}
+        keyExtractor={item => item.id}
       />
     </View>
   );

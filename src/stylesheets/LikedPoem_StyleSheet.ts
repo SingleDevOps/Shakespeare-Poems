@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Fonts } from '../../android/app/src/constants/fonts';
+import { Fonts } from '../constants/fonts';
 
 export const LikedPoem_Styles = StyleSheet.create({
     container: {

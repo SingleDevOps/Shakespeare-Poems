@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { StatusBar, useColorScheme, View } from 'react-native';
-import { Fonts } from '../../android/app/src/constants/fonts';
+import { Fonts } from '../constants/fonts';
 import { MainPage_Styles as styles } from '../stylesheets/MainPage_StyleSheet';
 import { NavigationProps } from '../types/navigation';
 import MenuButton from '../components/MenuButton';
 
 const MainPage: React.FC<NavigationProps> = ({ navigation, route }) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() ?? 'light';
 
   useEffect(() => {
     navigation.setOptions({
@@ -38,7 +38,7 @@ const MainPage: React.FC<NavigationProps> = ({ navigation, route }) => {
           key={item.screen}
           title={item.title}
           onPress={() => navigation.navigate(item.screen as any)}
-          colorScheme={colorScheme as 'light' | 'dark'}
+          colorScheme={colorScheme}
         />
       ))}
     </View>

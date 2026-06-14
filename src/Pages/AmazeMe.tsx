@@ -5,14 +5,16 @@ import {
   TouchableHighlight,
   ScrollView,
   useColorScheme,
-  Image,
 } from 'react-native';
 import PoemsData from '../../JsonFiles/Poems.json';
-import { Fonts } from '../../android/app/src/constants/fonts';
-import { checkPoemExistsInDB, insertPoem, deletePoem } from '../../src/services/database';
+import { Fonts } from '../constants/fonts';
+import { checkPoemExistsInDB, insertPoem, deletePoem } from '../services/database';
 import { AmazeMe_Styles as styles } from '../stylesheets/AmazeMe_StyleSheet';
 import { NavigationProps, Poem } from '../types/navigation';
 import { SelectablePoemText } from '../components/SelectablePoemText';
+import { SaveButton } from '../components/SaveButton';
+import FontSizeButton from '../components/FontSizeButton';
+import { useFontSize } from '../hooks/useFontSize';
 
 const getNewPoem = (): Poem => {
   const randomPoem = PoemsData[Math.floor(Math.random() * PoemsData.length)];
@@ -22,54 +24,10 @@ const getNewPoem = (): Poem => {
   };
 };
 
-interface StarButtonProps {
-  saved: boolean;
-  onPress: () => void;
-  colorScheme: 'light' | 'dark';
-}
-
-const StarButton: React.FC<StarButtonProps> = ({ saved, onPress, colorScheme }) => {
-  const starSource = saved
-    ? require('../../assets/pictures/goldenstar.png')
-    : colorScheme === 'dark'
-    ? require('../../assets/pictures/whitestar.jpg')
-    : require('../../assets/pictures/blackstar.png');
-
-  return (
-    <TouchableHighlight
-      onPress={onPress}
-      style={styles.savedPoemButton}
-      underlayColor="transparent"
-      activeOpacity={0.6}
-    >
-      <Image source={starSource} style={{ width: 30, height: 30 }} />
-    </TouchableHighlight>
-  );
-};
-
-interface FontSizeButtonProps {
-  label: string;
-  onPress: () => void;
-  colorScheme: 'light' | 'dark';
-}
-
-const FontSizeButton: React.FC<FontSizeButtonProps> = ({ label, onPress, colorScheme }) => (
-  <TouchableHighlight
-    style={colorScheme === 'light' ? styles.fontSizeButton : styles.darkFontSizeButton}
-    activeOpacity={0.6}
-    underlayColor={colorScheme === 'light' ? 'white' : '#333333'}
-    onPress={onPress}
-  >
-    <Text style={colorScheme === 'light' ? styles.buttonText : styles.darkButtonText}>
-      {label}
-    </Text>
-  </TouchableHighlight>
-);
-
 const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() ?? 'light';
   const [poem, setPoem] = useState<Poem>(getNewPoem());
-  const [fontSize, setFontSize] = useState(styles.PoemText.fontSize);
+  const { fontSize, addFontSize, reduceFontSize } = useFontSize(styles.PoemText.fontSize);
   const [saved, setSaved] = useState(false);
 
   const handleSavedPress = useCallback(async () => {
@@ -90,18 +48,6 @@ const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
     setPoem(getNewPoem());
   }, []);
 
-  const addFontSize = useCallback(() => {
-    if (fontSize <= 25) {
-      setFontSize(prevSize => prevSize + 1);
-    }
-  }, [fontSize]);
-
-  const reduceFontSize = useCallback(() => {
-    if (fontSize >= 15) {
-      setFontSize(prevSize => prevSize - 1);
-    }
-  }, [fontSize]);
-
   useEffect(() => {
     const checkSavedStatus = async () => {
       try {
@@ -114,6 +60,14 @@ const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
     checkSavedStatus();
   }, [poem.id]);
 
+  const headerRight = useCallback(() => (
+    <SaveButton
+      saved={saved}
+      onPress={handleSavedPress}
+      colorScheme={colorScheme}
+    />
+  ), [saved, handleSavedPress, colorScheme]);
+
   useEffect(() => {
     navigation.setOptions({
       title: poem.title,
@@ -125,15 +79,9 @@ const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
       headerStyle: {
         backgroundColor: colorScheme === 'light' ? '#FFF' : '#121212',
       },
-      headerRight: () => (
-        <StarButton
-          saved={saved}
-          onPress={handleSavedPress}
-          colorScheme={colorScheme as 'light' | 'dark'}
-        />
-      ),
+      headerRight,
     });
-  }, [navigation, poem.title, colorScheme, saved, handleSavedPress]);
+  }, [navigation, poem.title, colorScheme, headerRight]);
 
   return (
     <View style={colorScheme === 'light' ? styles.container : styles.darkContainer}>
@@ -145,7 +93,7 @@ const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
         <SelectablePoemText
           text={poem.poem}
           fontSize={fontSize}
-          colorScheme={colorScheme as 'light' | 'dark'}
+          colorScheme={colorScheme}
         />
       </ScrollView>
 
@@ -154,12 +102,12 @@ const AmazeMe: React.FC<NavigationProps> = ({ navigation }) => {
           <FontSizeButton
             label="Font Size -"
             onPress={reduceFontSize}
-            colorScheme={colorScheme as 'light' | 'dark'}
+            colorScheme={colorScheme}
           />
           <FontSizeButton
             label="Font Size +"
             onPress={addFontSize}
-            colorScheme={colorScheme as 'light' | 'dark'}
+            colorScheme={colorScheme}
           />
         </View>
 

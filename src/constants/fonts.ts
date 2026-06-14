@@ -1,5 +1,5 @@
 export const Fonts = {
-    NotoSerif:{
+  NotoSerif: {
     Regular: 'NotoSerif-Regular',
-    }
+  },
 };

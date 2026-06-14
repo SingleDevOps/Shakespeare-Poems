@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Fonts } from '../../android/app/src/constants/fonts';
+import { Fonts } from '../constants/fonts';
 
 export const AmazeMe_Styles = StyleSheet.create({
     container: {
@@ -78,7 +78,6 @@ export const AmazeMe_Styles = StyleSheet.create({
     fontSizeButton: {
       flex: 1,
       height: 40,
-      fontSize: 19,
       padding: 5,
       borderRadius: 5,
       alignItems: 'center',
@@ -90,7 +89,6 @@ export const AmazeMe_Styles = StyleSheet.create({
     darkFontSizeButton: {
       flex: 1,
       height: 40,
-      fontSize: 19,
       padding: 5,
       borderRadius: 5,
       alignItems: 'center',
@@ -105,7 +103,7 @@ export const AmazeMe_Styles = StyleSheet.create({
       borderRadius: 8,
       alignItems: 'center',
       alignSelf: 'center',
-      width: 370,
+      width: '90%',
       marginTop: -2,
     },
     darkGetNewPoemButton: {
@@ -114,7 +112,7 @@ export const AmazeMe_Styles = StyleSheet.create({
       borderRadius: 8,
       alignItems: 'center',
       alignSelf: 'center',
-      width: 370,
+      width: '90%',
       marginTop: -2,
     },
     getNewPoemButtonText: {
